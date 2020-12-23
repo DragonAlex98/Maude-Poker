@@ -1,0 +1,446 @@
+fmod POKER-CARD-NUMBER is
+	protecting NAT .
+	protecting BOOL .
+	sort Number .
+	ops A 2 3 4 5 6 7 8 9 10 J Q K : -> Number [ctor] .
+	op ToNat : Number -> Nat .
+	op _equals_ : Number Number -> Bool .
+	op _>_ : Number Number -> Bool .
+	op _<_ : Number Number -> Bool .
+	
+	
+	vars X Y : Number .
+
+	ceq ToNat(X) = 2 if X == 2 .
+	ceq ToNat(X) = 3 if X == 3 .
+	ceq ToNat(X) = 4 if X == 4 .
+	ceq ToNat(X) = 5 if X == 5 .
+	ceq ToNat(X) = 6 if X == 6 .
+	ceq ToNat(X) = 7 if X == 7 .
+	ceq ToNat(X) = 8 if X == 8 .
+	ceq ToNat(X) = 9 if X == 9 .
+	ceq ToNat(X) = 10 if X == 10 .
+	ceq ToNat(X) = 11 if X == J .
+	ceq ToNat(X) = 12 if X == Q .
+	ceq ToNat(X) = 13 if X == K .
+	ceq ToNat(X) = 14 if X == A .
+	
+	ceq _equals_(X, Y) = true if ToNat(X) == ToNat(Y) .
+	eq _equals_(X, Y) = false [owise] .
+	
+	ceq _>_(X, Y) = true if ToNat(X) > ToNat(Y) .
+	eq _>_(X, Y) = false [owise] .
+	
+	ceq _<_(X, Y) = true if ToNat(X) < ToNat(Y) .
+	eq _<_(X, Y) = false [owise] .
+endfm
+
+fmod POKER-CARD is
+
+	including POKER-CARD-NUMBER .
+	sorts Suit Card .
+	
+	ops C D H S : -> Suit [ctor] .
+	op [] : -> Card [ctor] .
+	op [__] : Number Suit -> Card [ctor] .
+	op CardNum : Card -> Number .
+	op CardSuit : Card -> Suit .
+	op _equals_ : Card Card -> Bool .
+	op _>_ : Card Card -> Bool .
+	op _<_ : Card Card -> Bool .
+	op _=f=_ : Card Card -> Bool .
+	
+	var N : Number .
+	var L : Suit .
+	vars X Y : Card .
+	
+	eq CardNum([N L]) = N .
+	eq CardSuit([N L]) = L . 
+	
+	ceq _equals_(X, Y) = true if CardNum(X) == CardNum(Y) .
+	eq _equals_(X, Y) = false [owise] .
+	
+	ceq _>_(X, Y) = true if CardNum(X) > CardNum(Y) .
+	eq _>_(X, Y) = false [owise] .
+	
+	ceq _<_(X, Y) = true if CardNum(X) < CardNum(Y) .
+	eq _<_(X, Y) = false [owise] .
+
+	ceq _=f=_(X, Y) = true if CardSuit(X) == CardSuit(Y) .
+	eq _=f=_(X, Y) = false [owise] .
+	
+endfm
+
+fmod POKER-PLAYER-HAND is
+
+	including POKER-CARD .
+	sort PlayerHand .
+
+	op <> : -> PlayerHand [ctor] .
+	op <_,_> : Card Card -> PlayerHand [ctor] .
+	
+	vars X Y S T : Card .
+	var V W : PlayerHand .
+	var Z : Nat .
+	
+	*** Returns the 1st card if the Nat is 1, the second card owise.
+	op GetCard : PlayerHand Nat -> Card .
+	
+	ceq GetCard(< X , Y >, Z) = X if Z == 1 .
+	eq GetCard(< X , Y >, Z) = Y [owise] .
+	
+	*** Returns the greatest card of a hand.
+	op GetGreatestCard : PlayerHand -> Card .
+	
+	ceq GetGreatestCard(W) = GetCard(W, 1) if GetCard(W, 1) > GetCard(W, 2) .
+	eq GetGreatestCard(W) = GetCard(W, 2) [owise] .
+	
+	*** Returns the lowest card of a hand.
+	op GetLowestCard : PlayerHand -> Card .
+	
+	ceq GetLowestCard(W) = GetCard(W, 1) if GetCard(W, 1) < GetCard(W, 2) .
+	eq GetLowestCard(W) = GetCard(W, 2) [owise] .
+	
+	*** Operations to confront hands
+	ops _equals_ _>_ _<_ : PlayerHand PlayerHand -> Bool .
+	
+	ceq _equals_(V, W) = false if V > W or V < W .
+	eq _equals_(V, W) = true [owise] .
+	
+	ceq _>_(V, W) = true if GetGreatestCard(V) > GetGreatestCard(W) .
+	ceq _>_(V, W) = true if GetGreatestCard(V) equals GetGreatestCard(W) and GetLowestCard(V) > GetLowestCard(W) .
+	eq _>_(V, W) = false [owise] .
+
+	ceq _<_(V, W) = true if GetGreatestCard(V) < GetGreatestCard(W) .
+	ceq _<_(V, W) = true if GetGreatestCard(V) equals GetGreatestCard(W) and GetLowestCard(V) < GetLowestCard(W) .
+	eq _<_(V, W) = false [owise] .
+	
+	*** Check pairs
+	op HasPairs : PlayerHand -> Bool .
+	
+	ceq HasPairs(V) = true if GetCard(V, 1) equals GetCard(V, 2) .
+	eq HasPairs(V) = false [owise] .
+	
+	*** Check flush
+	op HasFlushPair : PlayerHand -> Bool .
+	
+	ceq HasFlushPair(V) = true if GetCard(V, 1) =f= GetCard(V, 2) .
+	eq HasFlushPair(V) = false [owise] .
+	
+	*** Check No point in hand .
+	op NoPoints : PlayerHand -> Bool .
+	
+	ceq NoPoints(V) = true if HasFlushPair(V) == false and HasPairs(V) == false .
+
+endfm
+
+fmod POKER-PLAYER is
+
+	including POKER-PLAYER-HAND .
+	sort Player .
+	
+	var F : Player .
+	var H : PlayerHand .
+	
+	*** Creates a player with an id and a hand .
+	ops P1 P2 : PlayerHand -> Player .
+
+	*** Gets an id or a hand.
+	op GetPlayerId : Player -> Nat .
+	op GetPlayerHand : Player -> PlayerHand .
+	
+	eq GetPlayerId(P1(H)) = 1 .
+	eq GetPlayerId(P2(H)) = 2 .
+	eq GetPlayerHand(P1(H)) = H .
+	eq GetPlayerHand(P2(H)) = H .
+	
+	*** Check pairs
+	op HasPairs : Player -> Bool .
+	
+	ceq HasPairs(F) = true if HasPairs(GetPlayerHand(F)) .
+	eq HasPairs(F) = false [owise] .
+
+endfm
+
+fmod POKER-GAME-PLATE is
+	
+	including POKER-CARD .
+	sort Plate .
+	
+	*** Creates the plate
+	op _ _ _ _ _ : Card Card Card Card Card -> Plate [ctor] .
+	
+	vars X Y Z V W T : Card .
+	var L : Nat .
+	var P : Plate .
+	
+	*** Returns the card in the position specified.
+	op GetCard : Plate Nat -> Card .
+	
+	ceq GetCard(X Y Z V W, L) = X if L == 1 .
+	ceq GetCard(X Y Z V W, L) = Y if L == 2 .
+	ceq GetCard(X Y Z V W, L) = Z if L == 3 .
+	ceq GetCard(X Y Z V W, L) = V if L == 4 .
+	eq GetCard(X Y Z V W, L) = W [owise] .
+	
+	*** Returns if the plate has no points
+	op NoPoints : Plate -> Bool .
+	
+	eq NoPoints(P) = true .
+	
+	*** Return true if the plate has the card within him
+	op HasCard : Plate Card -> Bool .
+	
+	ceq HasCard(X Y Z V W, T) = true if T equals X or T equals Y or T equals Z or T equals V or T equals W .
+	eq HasCard(X Y Z V W, T) = false [owise] .
+	
+	*** Returns true if the plate has pairs
+	op HasPairs : Plate -> Bool .
+
+	*** Nuovi HasPairs
+	ceq HasPairs(X Y Z V W) = true if HasCard([] Y Z V W, X) .
+	ceq HasPairs(X Y Z V W) = true if HasCard(X [] Z V W, Y) .
+	ceq HasPairs(X Y Z V W) = true if HasCard(X Y [] V W, Z) .
+	ceq HasPairs(X Y Z V W) = true if HasCard(X Y Z [] W, V) .
+	ceq HasPairs(X Y Z V W) = true if HasCard(X Y Z V [], W) .
+	eq HasPairs(X Y Z V W) = false [owise] .
+
+	*** Vecchi HasPairs
+	*** ceq HasPairs(X Y Z V W) = true if X equals Y .
+	*** ceq HasPairs(X Y Z V W) = true if X equals Z .
+	*** ceq HasPairs(X Y Z V W) = true if X equals V .
+	*** ceq HasPairs(X Y Z V W) = true if X equals W .
+	*** ceq HasPairs(X Y Z V W) = true if Y equals Z .
+	*** ceq HasPairs(X Y Z V W) = true if Y equals V .
+	*** ceq HasPairs(X Y Z V W) = true if Y equals W .
+	*** ceq HasPairs(X Y Z V W) = true if Z equals V .
+	*** ceq HasPairs(X Y Z V W) = true if Z equals W .
+	*** ceq HasPairs(X Y Z V W) = true if V equals W .
+	
+	*** Returns true if the plate has pairs of something
+	op HasPairsOf : Plate Card -> Bool .
+	
+	ceq HasPairsOf(X Y Z V W, T) = HasCard([] Y Z V W, T) if T equals X .
+	ceq HasPairsOf(X Y Z V W, T) = HasCard(X [] Z V W, T) if T equals Y .
+	ceq HasPairsOf(X Y Z V W, T) = HasCard(X Y [] V W, T) if T equals Z .
+	ceq HasPairsOf(X Y Z V W, T) = HasCard(X Y Z [] W, T) if T equals V .
+	ceq HasPairsOf(X Y Z V W, T) = HasCard(X Y Z V [], T) if T equals W .
+	eq HasPairsOf(X Y Z V W, T) = false [owise] .
+
+	*** Returns true if the plate has double pairs .
+	op HasDPairs : Plate -> Bool .
+
+	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, X) and HasPairsOf(X Y Z V W, Y) and not X equals Y .
+	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, X) and HasPairsOf(X Y Z V W, Z) and not X equals Z .
+	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, X) and HasPairsOf(X Y Z V W, V) and not X equals V .
+	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, X) and HasPairsOf(X Y Z V W, W) and not X equals W .
+	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, Y) and HasPairsOf(X Y Z V W, Z) and not Y equals Z .
+	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, Y) and HasPairsOf(X Y Z V W, V) and not Y equals V .
+	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, Y) and HasPairsOf(X Y Z V W, W) and not Y equals W .
+	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, Z) and HasPairsOf(X Y Z V W, V) and not Z equals V .
+	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, Z) and HasPairsOf(X Y Z V W, W) and not Z equals W .
+	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, V) and HasPairsOf(X Y Z V W, W) and not V equals W .
+	eq HasDPairs(X Y Z V W) = false [owise] .
+	
+	*** Returns true if the plate has a tris
+	op HasTris : Plate -> Bool .
+	
+	ceq HasTris(X Y Z V W) = true if HasPairsOf([] Y Z V W, X) .
+	ceq HasTris(X Y Z V W) = true if HasPairsOf(X [] Z V W, Y) .
+	ceq HasTris(X Y Z V W) = true if HasPairsOf(X Y [] V W, Z) .
+	ceq HasTris(X Y Z V W) = true if HasPairsOf(X Y Z [] W, V) .
+	ceq HasTris(X Y Z V W) = true if HasPairsOf(X Y Z V [], W) .
+	eq HasTris(X Y Z V W) = false [owise] .
+
+	*** Returns true if the plate has tris of something
+	op HasTrisOf : Plate Card -> Bool .
+	
+	ceq HasTrisOf(X Y Z V W, T) = HasPairsOf([] Y Z V W, T) if T equals X .
+	ceq HasTrisOf(X Y Z V W, T) = HasPairsOf(X [] Z V W, T) if T equals Y .
+	ceq HasTrisOf(X Y Z V W, T) = HasPairsOf(X Y [] V W, T) if T equals Z .
+	ceq HasTrisOf(X Y Z V W, T) = HasPairsOf(X Y Z [] W, T) if T equals V .
+	ceq HasTrisOf(X Y Z V W, T) = HasPairsOf(X Y Z V [], T) if T equals W .
+	eq HasTrisOf(X Y Z V W, T) = false [owise] .
+
+	*** Return true if the plate has full
+	op HasFull : Plate -> Bool .
+
+	ceq HasFull(X Y Z V W) = true if HasDPairs(X Y Z V W) and HasTris(X Y Z V W) .
+	eq HasFull(X Y Z V W) = false [owise] .
+
+	*** Returns true if the plate has poker
+	op HasPoker : Plate -> Bool .
+
+	ceq HasPoker(X Y Z V W) = true if HasTrisOf([] Y Z V W, X) .
+	ceq HasPoker(X Y Z V W) = true if HasTrisOf(X [] Z V W, Y) .
+	ceq HasPoker(X Y Z V W) = true if HasTrisOf(X Y [] V W, Z) .
+	ceq HasPoker(X Y Z V W) = true if HasTrisOf(X Y Z [] W, V) .
+	ceq HasPoker(X Y Z V W) = true if HasTrisOf(X Y Z V [], W) .
+	eq HasPoker(X Y Z V W) = false [owise] .
+
+	*** Flush Part
+
+	*** Return true if the plate has that flush within him
+	op HasFlush : Plate Card -> Bool .
+	
+	ceq HasFlush(X Y Z V W, T) = true if T =f= X or T =f= Y or T =f= Z or T =f= V or T =f= W .
+	eq HasFlush(X Y Z V W, T) = false [owise] .
+
+	*** Returns true if the plate has pairs of something
+	op HasFlushPairsOf : Plate Card -> Bool .
+	
+	ceq HasFlushPairsOf(X Y Z V W, T) = HasFlush([] Y Z V W, T) if T =f= X .
+	ceq HasFlushPairsOf(X Y Z V W, T) = HasFlush(X [] Z V W, T) if T =f= Y .
+	ceq HasFlushPairsOf(X Y Z V W, T) = HasFlush(X Y [] V W, T) if T =f= Z .
+	ceq HasFlushPairsOf(X Y Z V W, T) = HasFlush(X Y Z [] W, T) if T =f= V .
+	ceq HasFlushPairsOf(X Y Z V W, T) = HasFlush(X Y Z V [], T) if T =f= W .
+	eq HasFlushPairsOf(X Y Z V W, T) = false [owise] .
+
+	*** Returns true if the plate has tris of something
+	op HasFlushTrisOf : Plate Card -> Bool .
+	
+	ceq HasFlushTrisOf(X Y Z V W, T) = HasFlushPairsOf([] Y Z V W, T) if T =f= X .
+	ceq HasFlushTrisOf(X Y Z V W, T) = HasFlushPairsOf(X [] Z V W, T) if T =f= Y .
+	ceq HasFlushTrisOf(X Y Z V W, T) = HasFlushPairsOf(X Y [] V W, T) if T =f= Z .
+	ceq HasFlushTrisOf(X Y Z V W, T) = HasFlushPairsOf(X Y Z [] W, T) if T =f= V .
+	ceq HasFlushTrisOf(X Y Z V W, T) = HasFlushPairsOf(X Y Z V [], T) if T =f= W .
+	eq HasFlushTrisOf(X Y Z V W, T) = false [owise] .
+
+	*** Returns true if the plate has poker of some flush
+	op HasFlushPokerOf : Plate Card -> Bool .
+	
+	ceq HasFlushPokerOf(X Y Z V W, T) = HasFlushTrisOf([] Y Z V W, T) if T =f= X .
+	ceq HasFlushPokerOf(X Y Z V W, T) = HasFlushTrisOf(X [] Z V W, T) if T =f= Y .
+	ceq HasFlushPokerOf(X Y Z V W, T) = HasFlushTrisOf(X Y [] V W, T) if T =f= Z .
+	ceq HasFlushPokerOf(X Y Z V W, T) = HasFlushTrisOf(X Y Z [] W, T) if T =f= V .
+	ceq HasFlushPokerOf(X Y Z V W, T) = HasFlushTrisOf(X Y Z V [], T) if T =f= W .
+	eq HasFlushPokerOf(X Y Z V W, T) = false [owise] .
+
+	*** Returns true if the plate has poker
+	op HasFullFlush : Plate -> Bool .
+
+	ceq HasFullFlush(X Y Z V W) = true if HasFlushPokerOf([] Y Z V W, X) .
+	ceq HasFullFlush(X Y Z V W) = true if HasFlushPokerOf(X [] Z V W, Y) .
+	ceq HasFullFlush(X Y Z V W) = true if HasFlushPokerOf(X Y [] V W, Z) .
+	ceq HasFullFlush(X Y Z V W) = true if HasFlushPokerOf(X Y Z [] W, V) .
+	ceq HasFullFlush(X Y Z V W) = true if HasFlushPokerOf(X Y Z V [], W) .
+	eq HasFullFlush(X Y Z V W) = false [owise] .
+
+endfm
+
+fmod POKER-RESULTS is
+	
+	including POKER-CARD .
+	sort Result .
+	
+	*** Defining all results
+	ops HCard Pairs DPairs Tris Straight Flush Full Poker : -> Result [ctor] .
+	op ToNat : Result -> Nat .
+	ops _>_ _<_ : Result Result -> Bool .
+
+	vars X Y : Result .
+
+	eq ToNat(HCard) = 1 .
+	eq ToNat(Pairs) = 2 .
+	eq ToNat(DPairs) = 3 .
+	eq ToNat(Tris) = 4 .
+	eq ToNat(Flush) = 6 .
+	eq ToNat(Full) = 7 .
+	eq ToNat(Poker) = 8 .
+
+	ceq _>_(X, Y) = true if ToNat(X) > ToNat(Y) .
+	eq _>_(X, Y) = false [owise] .
+	
+	ceq _<_(X, Y) = true if ToNat(X) < ToNat(Y) .
+	eq _<_(X, Y) = false [owise] .
+
+endfm
+
+fmod POKER-POINTS-CALCULATOR is
+
+	including POKER-RESULTS .
+	including POKER-PLAYER .
+	including POKER-GAME-PLATE .
+	
+	vars P L : Player .
+	vars X Y : PlayerHand .
+	vars Z : Plate .
+
+	*** Check pairs
+	ops Pairs DPairs Tris Flush Full Poker : PlayerHand Plate -> Result .
+	
+	ceq Pairs(X, Z) = Pairs if HasPairs(X) and NoPoints(Z) .
+	ceq Pairs(X, Z) = Pairs if HasCard(Z, GetCard(X, 1)) or HasCard(Z, GetCard(X, 2)) .
+	ceq Pairs(X, Z) = Pairs if NoPoints(X) and HasPairs(Z) .
+	eq Pairs(X, Z) = HCard [owise] .
+	
+	*** Check Double Pairs
+	ceq DPairs(X, Z) = DPairs if HasPairs(X) and HasPairs(Z) .
+	ceq DPairs(X, Z) = DPairs if HasCard(Z, GetCard(X, 1)) and HasPairs(Z) and not HasPairsOf(Z, GetCard(X, 1)) .
+	ceq DPairs(X, Z) = DPairs if HasCard(Z, GetCard(X, 2)) and HasPairs(Z) and not HasPairsOf(Z, GetCard(X, 2)) .
+	ceq DPairs(X, Z) = DPairs if HasCard(Z, GetCard(X, 1)) and HasCard(Z, GetCard(X, 2)) .
+	ceq DPairs(X, Z) = DPairs if NoPoints(X) and HasDPairs(Z) .
+	eq DPairs(X, Z) = Pairs(X, Z) [owise] .
+
+	*** Check Tris
+	ceq Tris(X, Z) = Tris if HasPairsOf(Z, GetCard(X, 1)) .
+	ceq Tris(X, Z) = Tris if HasPairsOf(Z, GetCard(X, 2)) .
+	ceq Tris(X, Z) = Tris if HasPairs(X) and HasCard(Z, GetCard(X, 1)) .
+	ceq Tris(X, Z) = Tris if NoPoints(X) and HasTris(Z) .
+	eq Tris(X, Z) = DPairs(X, Z) [owise] .
+
+	*** Check Flush
+	ceq Flush(X, Z) = Flush if HasFlushPair(X) and HasFlushTrisOf(Z, GetCard(X, 1)) .
+	ceq Flush(X, Z) = Flush if HasFlushPokerOf(Z, GetCard(X, 1)) .
+	ceq Flush(X, Z) = Flush if HasFlushPokerOf(Z, GetCard(X, 2)) .
+	ceq Flush(X, Z) = Flush if HasFullFlush(Z) .
+	eq Flush(X, Z) = Tris(X, Z) [owise] .
+
+	*** Check Full House
+	ceq Full(X, Z) = Full if DPairs(X, Z) == DPairs and Tris(X, Z) == Tris .
+	ceq Full(X, Z) = Full if HasPairs(X) and HasTris(Z) .
+	eq Full(X, Z) = Flush(X, Z) [owise] .
+
+	*** Check Poker
+	ceq Poker(X, Z) = Poker if HasTrisOf(Z, GetCard(X, 1)) or HasTrisOf(Z, GetCard(X, 2)) .
+	ceq Poker(X, Z) = Poker if HasPairs(X) and HasPairsOf(Z, GetCard(X, 1)) .
+	ceq Poker(X, Z) = Poker if HasPoker(Z) .
+	eq Poker(X, Z) = Full(X, Z) [owise] .
+
+	*** Evaluator
+	op EvaluateHand : PlayerHand Plate -> Result .
+
+	eq EvaluateHand(X, Z) = Poker(X, Z) .
+
+endfm
+
+fmod POKER-GAME-CONFIG is
+
+	including POKER-POINTS-CALCULATOR .
+	including POKER-PLAYER .
+	including POKER-GAME-PLATE .
+	sort PokerGame .
+	
+	*** Creates a poker game with the players and the plate .
+	op _vs_plate_ : Player Player Plate -> PokerGame .
+
+	*** Returns p1, p2 or plate of this game	
+	ops GetP1 GetP2 : PokerGame -> Player .
+	op GetPlate : PokerGame -> Plate .
+	
+	vars F L : Player .
+	var P : Plate .
+	var G : PokerGame .
+	
+	eq GetP1(F vs L plate P) = F .
+	eq GetP2(F vs L plate P) = L .
+	eq GetPlate(F vs L plate P) = P .	
+
+	*** Returns the winner
+	op Winner : PokerGame -> Player .
+
+	ceq Winner(F vs L plate P) = F if EvaluateHand(GetPlayerHand(F), P) > EvaluateHand(GetPlayerHand(L), P) .
+	ceq Winner(F vs L plate P) = L if EvaluateHand(GetPlayerHand(F), P) < EvaluateHand(GetPlayerHand(L), P) .
+	*** ceq Winner(F vs L plate P) = checkgreatest [owise] .
+
+endfm
