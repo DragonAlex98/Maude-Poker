@@ -1,0 +1,165 @@
+fmod POKER-GAME-PLATE is
+	
+	including POKER-CARD .
+	sort Plate .
+	
+	*** Creates the plate
+	op _ _ _ _ _ : Card Card Card Card Card -> Plate [ctor] .
+	
+	vars X Y Z V W T : Card .
+	var L : Nat .
+	var P : Plate .
+	
+	*** Returns the card in the position specified.
+	op GetCard : Plate Nat -> Card .
+	
+	ceq GetCard(X Y Z V W, L) = X if L == 1 .
+	ceq GetCard(X Y Z V W, L) = Y if L == 2 .
+	ceq GetCard(X Y Z V W, L) = Z if L == 3 .
+	ceq GetCard(X Y Z V W, L) = V if L == 4 .
+	eq GetCard(X Y Z V W, L) = W [owise] .
+	
+	*** Returns if the plate has no points
+	op NoPoints : Plate -> Bool .
+	
+	eq NoPoints(P) = true .
+	
+	*** Return true if the plate has the card within him
+	op HasCard : Plate Card -> Bool .
+	
+	ceq HasCard(X Y Z V W, T) = true if T equals X or T equals Y or T equals Z or T equals V or T equals W .
+	eq HasCard(X Y Z V W, T) = false [owise] .
+	
+	*** Returns true if the plate has pairs
+	op HasPairs : Plate -> Bool .
+
+	*** Nuovi HasPairs
+	ceq HasPairs(X Y Z V W) = true if HasCard([] Y Z V W, X) .
+	ceq HasPairs(X Y Z V W) = true if HasCard(X [] Z V W, Y) .
+	ceq HasPairs(X Y Z V W) = true if HasCard(X Y [] V W, Z) .
+	ceq HasPairs(X Y Z V W) = true if HasCard(X Y Z [] W, V) .
+	ceq HasPairs(X Y Z V W) = true if HasCard(X Y Z V [], W) .
+	eq HasPairs(X Y Z V W) = false [owise] .
+
+	*** Vecchi HasPairs
+	*** ceq HasPairs(X Y Z V W) = true if X equals Y .
+	*** ceq HasPairs(X Y Z V W) = true if X equals Z .
+	*** ceq HasPairs(X Y Z V W) = true if X equals V .
+	*** ceq HasPairs(X Y Z V W) = true if X equals W .
+	*** ceq HasPairs(X Y Z V W) = true if Y equals Z .
+	*** ceq HasPairs(X Y Z V W) = true if Y equals V .
+	*** ceq HasPairs(X Y Z V W) = true if Y equals W .
+	*** ceq HasPairs(X Y Z V W) = true if Z equals V .
+	*** ceq HasPairs(X Y Z V W) = true if Z equals W .
+	*** ceq HasPairs(X Y Z V W) = true if V equals W .
+	
+	*** Returns true if the plate has pairs of something
+	op HasPairsOf : Plate Card -> Bool .
+	
+	ceq HasPairsOf(X Y Z V W, T) = HasCard([] Y Z V W, T) if T equals X .
+	ceq HasPairsOf(X Y Z V W, T) = HasCard(X [] Z V W, T) if T equals Y .
+	ceq HasPairsOf(X Y Z V W, T) = HasCard(X Y [] V W, T) if T equals Z .
+	ceq HasPairsOf(X Y Z V W, T) = HasCard(X Y Z [] W, T) if T equals V .
+	ceq HasPairsOf(X Y Z V W, T) = HasCard(X Y Z V [], T) if T equals W .
+	eq HasPairsOf(X Y Z V W, T) = false [owise] .
+
+	*** Returns true if the plate has double pairs .
+	op HasDPairs : Plate -> Bool .
+
+	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, X) and HasPairsOf(X Y Z V W, Y) and not X equals Y .
+	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, X) and HasPairsOf(X Y Z V W, Z) and not X equals Z .
+	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, X) and HasPairsOf(X Y Z V W, V) and not X equals V .
+	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, X) and HasPairsOf(X Y Z V W, W) and not X equals W .
+	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, Y) and HasPairsOf(X Y Z V W, Z) and not Y equals Z .
+	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, Y) and HasPairsOf(X Y Z V W, V) and not Y equals V .
+	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, Y) and HasPairsOf(X Y Z V W, W) and not Y equals W .
+	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, Z) and HasPairsOf(X Y Z V W, V) and not Z equals V .
+	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, Z) and HasPairsOf(X Y Z V W, W) and not Z equals W .
+	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, V) and HasPairsOf(X Y Z V W, W) and not V equals W .
+	eq HasDPairs(X Y Z V W) = false [owise] .
+	
+	*** Returns true if the plate has a tris
+	op HasTris : Plate -> Bool .
+	
+	ceq HasTris(X Y Z V W) = true if HasPairsOf([] Y Z V W, X) .
+	ceq HasTris(X Y Z V W) = true if HasPairsOf(X [] Z V W, Y) .
+	ceq HasTris(X Y Z V W) = true if HasPairsOf(X Y [] V W, Z) .
+	ceq HasTris(X Y Z V W) = true if HasPairsOf(X Y Z [] W, V) .
+	ceq HasTris(X Y Z V W) = true if HasPairsOf(X Y Z V [], W) .
+	eq HasTris(X Y Z V W) = false [owise] .
+
+	*** Returns true if the plate has tris of something
+	op HasTrisOf : Plate Card -> Bool .
+	
+	ceq HasTrisOf(X Y Z V W, T) = HasPairsOf([] Y Z V W, T) if T equals X .
+	ceq HasTrisOf(X Y Z V W, T) = HasPairsOf(X [] Z V W, T) if T equals Y .
+	ceq HasTrisOf(X Y Z V W, T) = HasPairsOf(X Y [] V W, T) if T equals Z .
+	ceq HasTrisOf(X Y Z V W, T) = HasPairsOf(X Y Z [] W, T) if T equals V .
+	ceq HasTrisOf(X Y Z V W, T) = HasPairsOf(X Y Z V [], T) if T equals W .
+	eq HasTrisOf(X Y Z V W, T) = false [owise] .
+
+	*** Return true if the plate has full
+	op HasFull : Plate -> Bool .
+
+	ceq HasFull(X Y Z V W) = true if HasDPairs(X Y Z V W) and HasTris(X Y Z V W) .
+	eq HasFull(X Y Z V W) = false [owise] .
+
+	*** Returns true if the plate has poker
+	op HasPoker : Plate -> Bool .
+
+	ceq HasPoker(X Y Z V W) = true if HasTrisOf([] Y Z V W, X) .
+	ceq HasPoker(X Y Z V W) = true if HasTrisOf(X [] Z V W, Y) .
+	ceq HasPoker(X Y Z V W) = true if HasTrisOf(X Y [] V W, Z) .
+	ceq HasPoker(X Y Z V W) = true if HasTrisOf(X Y Z [] W, V) .
+	ceq HasPoker(X Y Z V W) = true if HasTrisOf(X Y Z V [], W) .
+	eq HasPoker(X Y Z V W) = false [owise] .
+
+	*** Flush Part
+
+	*** Return true if the plate has that flush within him
+	op HasFlush : Plate Card -> Bool .
+	
+	ceq HasFlush(X Y Z V W, T) = true if T =f= X or T =f= Y or T =f= Z or T =f= V or T =f= W .
+	eq HasFlush(X Y Z V W, T) = false [owise] .
+
+	*** Returns true if the plate has pairs of something
+	op HasFlushPairsOf : Plate Card -> Bool .
+	
+	ceq HasFlushPairsOf(X Y Z V W, T) = HasFlush([] Y Z V W, T) if T =f= X .
+	ceq HasFlushPairsOf(X Y Z V W, T) = HasFlush(X [] Z V W, T) if T =f= Y .
+	ceq HasFlushPairsOf(X Y Z V W, T) = HasFlush(X Y [] V W, T) if T =f= Z .
+	ceq HasFlushPairsOf(X Y Z V W, T) = HasFlush(X Y Z [] W, T) if T =f= V .
+	ceq HasFlushPairsOf(X Y Z V W, T) = HasFlush(X Y Z V [], T) if T =f= W .
+	eq HasFlushPairsOf(X Y Z V W, T) = false [owise] .
+
+	*** Returns true if the plate has tris of something
+	op HasFlushTrisOf : Plate Card -> Bool .
+	
+	ceq HasFlushTrisOf(X Y Z V W, T) = HasFlushPairsOf([] Y Z V W, T) if T =f= X .
+	ceq HasFlushTrisOf(X Y Z V W, T) = HasFlushPairsOf(X [] Z V W, T) if T =f= Y .
+	ceq HasFlushTrisOf(X Y Z V W, T) = HasFlushPairsOf(X Y [] V W, T) if T =f= Z .
+	ceq HasFlushTrisOf(X Y Z V W, T) = HasFlushPairsOf(X Y Z [] W, T) if T =f= V .
+	ceq HasFlushTrisOf(X Y Z V W, T) = HasFlushPairsOf(X Y Z V [], T) if T =f= W .
+	eq HasFlushTrisOf(X Y Z V W, T) = false [owise] .
+
+	*** Returns true if the plate has poker of some flush
+	op HasFlushPokerOf : Plate Card -> Bool .
+	
+	ceq HasFlushPokerOf(X Y Z V W, T) = HasFlushTrisOf([] Y Z V W, T) if T =f= X .
+	ceq HasFlushPokerOf(X Y Z V W, T) = HasFlushTrisOf(X [] Z V W, T) if T =f= Y .
+	ceq HasFlushPokerOf(X Y Z V W, T) = HasFlushTrisOf(X Y [] V W, T) if T =f= Z .
+	ceq HasFlushPokerOf(X Y Z V W, T) = HasFlushTrisOf(X Y Z [] W, T) if T =f= V .
+	ceq HasFlushPokerOf(X Y Z V W, T) = HasFlushTrisOf(X Y Z V [], T) if T =f= W .
+	eq HasFlushPokerOf(X Y Z V W, T) = false [owise] .
+
+	*** Returns true if the plate has poker
+	op HasFullFlush : Plate -> Bool .
+
+	ceq HasFullFlush(X Y Z V W) = true if HasFlushPokerOf([] Y Z V W, X) .
+	ceq HasFullFlush(X Y Z V W) = true if HasFlushPokerOf(X [] Z V W, Y) .
+	ceq HasFullFlush(X Y Z V W) = true if HasFlushPokerOf(X Y [] V W, Z) .
+	ceq HasFullFlush(X Y Z V W) = true if HasFlushPokerOf(X Y Z [] W, V) .
+	ceq HasFullFlush(X Y Z V W) = true if HasFlushPokerOf(X Y Z V [], W) .
+	eq HasFullFlush(X Y Z V W) = false [owise] .
+
+endfm

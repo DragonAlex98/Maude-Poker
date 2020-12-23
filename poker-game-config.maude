@@ -1,0 +1,30 @@
+fmod POKER-GAME-CONFIG is
+
+	including POKER-POINTS-CALCULATOR .
+	including POKER-PLAYER .
+	including POKER-GAME-PLATE .
+	sort PokerGame .
+	
+	*** Creates a poker game with the players and the plate .
+	op _vs_plate_ : Player Player Plate -> PokerGame .
+
+	*** Returns p1, p2 or plate of this game	
+	ops GetP1 GetP2 : PokerGame -> Player .
+	op GetPlate : PokerGame -> Plate .
+	
+	vars F L : Player .
+	var P : Plate .
+	var G : PokerGame .
+	
+	eq GetP1(F vs L plate P) = F .
+	eq GetP2(F vs L plate P) = L .
+	eq GetPlate(F vs L plate P) = P .	
+
+	*** Returns the winner
+	op Winner : PokerGame -> Player .
+
+	ceq Winner(F vs L plate P) = F if EvaluateHand(GetPlayerHand(F), P) > EvaluateHand(GetPlayerHand(L), P) .
+	ceq Winner(F vs L plate P) = L if EvaluateHand(GetPlayerHand(F), P) < EvaluateHand(GetPlayerHand(L), P) .
+	*** ceq Winner(F vs L plate P) = checkgreatest [owise] .
+
+endfm

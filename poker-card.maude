@@ -1,0 +1,35 @@
+fmod POKER-CARD is
+
+	including POKER-CARD-NUMBER .
+	sorts Suit Card .
+	
+	ops C D H S : -> Suit [ctor] .
+	op [] : -> Card [ctor] .
+	op [__] : Number Suit -> Card [ctor] .
+	op CardNum : Card -> Number .
+	op CardSuit : Card -> Suit .
+	op _equals_ : Card Card -> Bool .
+	op _>_ : Card Card -> Bool .
+	op _<_ : Card Card -> Bool .
+	op _=f=_ : Card Card -> Bool .
+	
+	var N : Number .
+	var L : Suit .
+	vars X Y : Card .
+	
+	eq CardNum([N L]) = N .
+	eq CardSuit([N L]) = L . 
+	
+	ceq _equals_(X, Y) = true if CardNum(X) == CardNum(Y) .
+	eq _equals_(X, Y) = false [owise] .
+	
+	ceq _>_(X, Y) = true if CardNum(X) > CardNum(Y) .
+	eq _>_(X, Y) = false [owise] .
+	
+	ceq _<_(X, Y) = true if CardNum(X) < CardNum(Y) .
+	eq _<_(X, Y) = false [owise] .
+
+	ceq _=f=_(X, Y) = true if CardSuit(X) == CardSuit(Y) .
+	eq _=f=_(X, Y) = false [owise] .
+	
+endfm

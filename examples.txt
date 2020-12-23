@@ -1,0 +1,215 @@
+*** Number examples ***
+red A .
+red 2 .
+red 3 .
+red 4 .
+red 5 .
+red 6 .
+red 7 .
+red 8 .
+red 9 .
+red 10 .
+red J .
+red Q .
+red K .
+red A < 2 . *** false
+red A > 2 . *** true
+red A equals A . *** true
+red A == A . *** true
+
+*** Card examples ***
+red [A C] . *** A of Clubs
+red [4 S] . *** 4 of Spades
+red [J H] . *** J of Hearts
+red [6 D] . *** 6 of Diamonds
+red [A C] equals [A C] . *** true
+red [A C] == [A C] . *** true
+red [A C] == [A S] . *** false
+red [A C] > [J D] . *** true
+red [5 C] > [J D] . *** false
+red [5 C] < [J D] . *** true
+red [A C] < [J D] . *** false
+
+red [A S] =f= [A D] . *** true
+red [A S] =f= [2 S] . *** false
+
+*** Player hand examples ***
+red <[A C],[6 D]> . *** Player hand.
+red GetCard(<[A C],[6 D]>, 1) . *** [A C]
+red GetCard(<[A C],[6 D]>, 2) . *** [6 D]
+
+red GetGreatestCard(<[A C], [4 S]>) . *** [A C]
+red GetGreatestCard(<[4 H], [5 S]>) . *** [5 S]
+red GetLowestCard(<[A C], [4 S]>) . *** [4 S]
+red GetLowestCard(<[4 H], [5 S]>) . *** [4 H]
+
+red < [A C],[6 D] > equals < [A C],[6 D] > . *** true
+red < [A C],[6 D] > equals < [J C],[10 D] > . *** false
+red < [A C],[6 D] > == < [A C],[6 D] > . *** true
+red < [A C],[6 D] > == < [J C],[10 D] > . *** false
+red < [A C],[6 D] > > < [K C],[6 D] > . *** true
+red < [A C],[6 D] > > < [A H],[A D] > . *** false
+red < [A C],[6 D] > < < [K C],[6 D] > . *** false
+red < [A C],[6 D] > < < [A H],[A D] > . *** true
+
+
+red GetGreatestCard(< [A C], [8 S] >) equals GetGreatestCard(< [4 H], [A S] >) . *** true
+red GetGreatestCard(< [K C], [8 S] >) equals GetGreatestCard(< [4 H], [A S] >) . *** false
+red GetGreatestCard(< [A C], [8 S] >) == GetGreatestCard(< [4 H], [A S] >) . *** false
+red GetGreatestCard(< [K C], [8 S] >) == GetGreatestCard(< [4 H], [A S] >) . *** false
+
+
+red HasFlushPair(<[A S],[2 S]>) . *** true
+red HasFlushPair(<[A S],[2 C]>) . *** false
+
+
+*** Plate examples ***
+
+red [A C] [3 H] [A S] [4 D] [J C] . *** plate
+
+red GetCard([A C] [3 H] [A S] [4 D] [J C], 1) . *** [A C]
+red GetCard([A C] [3 H] [A S] [4 D] [J C], 2) . *** [3 H]
+red GetCard([A C] [3 H] [A S] [4 D] [J C], 3) . *** [A S]
+red GetCard([A C] [3 H] [A S] [4 D] [J C], 4) . *** [4 D]
+red GetCard([A C] [3 H] [A S] [4 D] [J C], 5) . *** [J C]
+
+red HasCard([A C] [3 H] [A S] [4 D] [J C], [3 H]) . *** true
+red HasCard([A C] [3 H] [A S] [4 D] [J C], [8 H]) . *** false
+
+red HasPairs([A C] [3 H] [A S] [4 D] [J C]) . *** true
+red HasPairs([A C] [3 H] [5 S] [4 D] [J C]) . *** false
+
+red HasPairsOf([A C] [3 H] [A S] [4 D] [J C], [A H]) . *** true
+red HasPairsOf([A C] [3 H] [5 S] [4 D] [J C], [5 H]) . *** false
+
+red HasTris([5 C] [3 H] [5 S] [5 D] [J C]) . *** true
+red HasTris([A C] [3 H] [5 S] [5 D] [J C]) . *** false
+
+red HasTrisOf([5 C] [3 H] [5 S] [5 D] [J C], [5 H]) . *** true
+red HasTrisOf([A C] [3 H] [5 S] [3 D] [J C], [3 C]) . *** false
+
+red HasDPairs([A C] [A H] [3 S] [3 D] [J C]) . *** true
+red HasDPairs([A C] [A H] [5 S] [3 D] [3 C]) . *** true
+red HasDPairs([A C] [5 H] [5 S] [3 D] [3 C]) . *** true
+red HasDPairs([A C] [A H] [A S] [3 D] [J C]) . *** false
+red HasDPairs([A C] [A H] [A S] [A D] [J C]) . *** false
+
+red HasFull([A C] [A H] [A S] [3 D] [3 C]) . *** true
+red HasFull([A C] [A H] [3 S] [3 D] [3 C]) . *** true
+red HasFull([A C] [3 H] [A S] [3 D] [3 C]) . *** true
+red HasFull([A C] [A H] [A S] [4 D] [3 C]) . *** false
+red HasFull([A C] [A H] [A S] [3 D] [A C]) . *** false
+
+red HasFlush([A C] [3 H] [A S] [4 D] [J C], [3 H]) . *** true
+red HasFlush([A C] [3 H] [A S] [4 C] [J C], [8 D]) . *** false
+
+red HasFlushPairsOf([A C] [3 H] [A S] [4 H] [J C], [A H]) . *** true
+red HasFlushPairsOf([A C] [3 H] [5 S] [4 D] [J C], [5 H]) . *** false
+
+red HasFlushTrisOf([5 C] [3 H] [5 C] [5 D] [J C], [5 C]) . *** true
+red HasFlushTrisOf([A C] [3 H] [5 S] [3 D] [J C], [3 C]) . *** false
+
+red HasFlushPokerOf([5 C] [3 H] [5 C] [5 C] [J C], [A C]) . *** true
+red HasFlushPokerOf([A C] [3 H] [5 C] [3 D] [J C], [A C]) . *** false
+
+red HasFullFlush([A C] [3 C] [5 C] [3 C] [J C]) . *** true
+red HasFullFlush([A C] [3 C] [5 C] [3 C] [J D]) . *** true
+
+*** Player examples ***
+
+red P1(<[A C],[4 H]>) . *** Player 1
+red P2(<[A C],[4 H]>) . *** Player 2
+red GetPlayerId(P2(<[A C],[4 H]>)) . *** 2
+red GetPlayerId(P1(<[A C],[4 H]>)) . *** 1
+red GetPlayerHand(P1(<[A C],[4 H]>)) . *** <[A C],[4 H]>
+red GetPlayerHand(P1(<[A C],[4 D]>)) . *** <[A C],[4 D]>
+
+*** Game config examples ***
+red P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) plate [J C] [5 S] [A S] [8 H] [9 D] . *** Game
+red GetP1(P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) plate [J C] [5 S] [A S] [8 H] [9 D]) . *** P1(<[A C],[4 H]>)
+red GetP2(P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) plate [J C] [5 S] [A S] [8 H] [9 D]) . *** P2(<[A H],[10 S]>)
+red GetPlate(P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) plate [J C] [5 S] [A S] [8 H] [9 D]) . *** [J C] [5 S] [A S] [8 H] [9 D]
+
+*** Points Calculator examples ***
+
+** Pairs - Check if a PlayerHand scored a Pairs **
+red Pairs(<[A C], [A H]>, [3 C] [4 C] [6 D] [7 H] [J C]) . *** Pairs
+red Pairs(<[A C], [2 H]>, [3 C] [4 C] [4 D] [7 H] [J C]) . *** Pairs
+red Pairs(<[A C], [6 H]>, [3 C] [4 C] [6 D] [7 H] [J C]) . *** Pairs
+red Pairs(<[A C], [8 H]>, [3 C] [4 C] [6 D] [7 H] [J C]) . *** HCard
+
+** Double Pairs - Check if a PlayerHand scored a Double Pairs **
+red DPairs(<[A C], [A H]>, [3 C] [4 C] [4 D] [7 H] [J C]) . *** DPairs
+red DPairs(<[A C], [2 H]>, [A C] [4 C] [4 D] [7 H] [J C]) . *** DPairs
+red DPairs(<[A C], [2 H]>, [5 C] [4 C] [4 D] [2 H] [J C]) . *** DPairs
+red DPairs(<[A C], [2 H]>, [5 C] [4 C] [4 D] [5 H] [J C]) . *** DPairs
+*** red DPairs(<[4 C], [2 H]>, [A C] [4 C] [4 D] [7 H] [J C]) . *** HCard
+red DPairs(<[A C], [2 H]>, [5 C] [A C] [4 D] [2 H] [J C]) . *** DPairs
+red DPairs(<[A C], [8 H]>, [3 C] [4 C] [6 D] [7 H] [J C]) . *** HCard
+
+** Tris - Check if a PlayerHand scored a Tris **
+red Tris(<[A C],[5 H]>, [A C] [3 H] [A S] [4 D] [J C]) . *** Tris
+red Tris(<[A C],[A H]>, [A C] [3 H] [7 S] [4 D] [J C]) . *** Tris
+red Tris(<[8 C],[6 H]>, [A C] [A H] [A S] [4 D] [J C]) . *** Tris
+red Tris(<[A C],[6 H]>, [A C] [3 H] [7 S] [4 D] [J C]) . *** HCard
+
+** Full - Check if a PlayerHand scored a Full **
+*** 1 + 2 e 1 + 1
+red Full(<[A C],[5 H]>, [A C] [5 H] [A S] [4 D] [J C]) . *** Full
+red Full(<[A C],[5 H]>, [A C] [5 H] [5 S] [4 D] [J C]) . *** Full
+
+*** 1 + 1 e T
+red Full(<[A C],[6 H]>, [A C] [5 H] [5 S] [5 D] [J C]) . *** Full
+red Full(<[A C],[6 H]>, [6 C] [5 H] [5 S] [5 D] [J C]) . *** Full
+
+*** P + T
+red Full(<[A C],[A H]>, [8 C] [5 H] [5 S] [5 D] [J C]) . *** Full
+
+*** 1 + 2 e P
+red Full(<[A C],[6 H]>, [A C] [5 H] [A S] [5 D] [J C]) . *** Full
+red Full(<[A C],[6 H]>, [6 C] [5 H] [6 S] [5 D] [J C]) . *** Full
+
+*** 2 + 1 e P
+red Full(<[A C],[A H]>, [8 C] [5 H] [7 S] [5 D] [A C]) . *** Full
+
+*** N + F
+red Full(<[3 C],[4 H]>, [8 C] [5 H] [5 S] [5 D] [8 C]) . *** Full
+
+*** red Full(<[A C],[6 H]>, [A C] [A H] [A S] [6 D] [J C]) . *** HCard
+
+red Full(<[A C],[6 H]>, [A C] [A H] [3 S] [Q D] [J C]) . *** HCard
+
+** Flush - Check if a PlayerHand scored a Flush **
+red Flush(<[2 H],[3 H]>, [A H] [A H] [A H] [A D] [4 C]) . *** Flush
+
+red Flush(<[2 H],[3 D]>, [A H] [A H] [A H] [A D] [4 H]) . *** Flush
+red Flush(<[2 H],[3 D]>, [A D] [A D] [A H] [A D] [4 D]) . *** Flush
+
+red Flush(<[2 H],[3 C]>, [A D] [A D] [A D] [A D] [4 D]) . *** Flush
+
+red Flush(<[2 H],[3 H]>, [A D] [A H] [A H] [A H] [4 H]) . *** Flush
+
+** Poker - Check if a PlayerHand scored a Poker **
+*** Poker on plate
+red Poker(<[2 H],[3 H]>, [A H] [A H] [A H] [A H] [4 H]) . *** Poker
+red Poker(<[2 H],[3 H]>, [A H] [A H] [A H] [A H] [2 H]) . *** Poker
+red Poker(<[2 H],[2 H]>, [A H] [A H] [A H] [A H] [2 H]) . *** Poker
+
+*** Poker 1 + T
+red Poker(<[A H],[3 H]>, [A H] [A H] [A H] [4 H] [2 H]) . *** Poker
+red Poker(<[3 H],[A H]>, [A H] [A H] [A H] [4 H] [2 H]) . *** Poker
+red Poker(<[A H],[3 H]>, [A H] [A H] [A H] [3 H] [3 H]) . *** Poker
+red Poker(<[A H],[3 H]>, [A H] [A H] [A H] [3 H] [2 H]) . *** Poker
+
+*** Poker 2 + 2
+red Poker(<[A H],[A H]>, [4 H] [A H] [A H] [3 H] [2 H]) . *** Poker
+red Poker(<[A H],[A H]>, [3 H] [A H] [A H] [3 H] [3 H]) . *** Poker
+red Poker(<[A H],[A H]>, [2 H] [A H] [A H] [3 H] [2 H]) . *** Poker
+
+*** PokerGame examples ***
+red P1(<[10 H],[J S]>) vs P2(<[A S],[Q H]>) plate [10 S] [Q D] [3 H] [A C] [10 D] .
+
+red Winner(P1(<[10 H],[J S]>) vs P2(<[A S],[Q H]>) plate [10 S] [Q D] [3 H] [A C] [10 D]) .
+
+red Winner(P1(<[10 H],[J S]>) vs P2(<[A S],[Q H]>) plate [Q S] [Q D] [3 H] [A C] [10 D]) .
+
