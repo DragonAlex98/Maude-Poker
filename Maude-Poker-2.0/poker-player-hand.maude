@@ -2,6 +2,7 @@ fmod POKER-PLAYER-HAND is
 
 	including POKER-CARD .
 	protecting SET{Nat} .
+	protecting LIST{Card} .
 	sort PlayerHand .
 
 	op <> : -> PlayerHand [ctor] .
@@ -65,5 +66,10 @@ fmod POKER-PLAYER-HAND is
 	op GetAsSet : PlayerHand -> Set{Nat} .
 
 	eq GetAsSet(V) = ( ToNat(CardNum(GetCard(V, 1))), ToNat(CardNum(GetCard(V, 2))) ) .
+
+	*** Get a Player Hand as a List of Card
+	op GetAsList : PlayerHand -> List{Card} .
+
+	eq GetAsList(V) = ( GetCard(V, 1) GetCard(V, 2) ) .
 
 endfm

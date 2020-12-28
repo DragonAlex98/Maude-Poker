@@ -2,6 +2,7 @@ fmod POKER-GAME-PLATE is
 	
 	including POKER-CARD .
 	including POKER-POINT .
+	protecting LIST{Card} .
 	protecting SET{Nat} .
 	*** protecting LIST{Card} .
 	sort Plate .
@@ -212,5 +213,10 @@ fmod POKER-GAME-PLATE is
 	op GetAsSet : Plate -> Set{Nat} .
 
 	eq GetAsSet(X Y Z V W) = ( ToNat(CardNum(X)), ToNat(CardNum(Y)), ToNat(CardNum(Z)), ToNat(CardNum(V)), ToNat(CardNum(W)) ) .
+
+	*** Get a Plate as a List of Card
+	op GetAsList : Plate -> List{Card} .
+
+	eq GetAsList(P) = ( GetCard(P, 1) GetCard(P, 2) GetCard(P, 3) GetCard(P, 4) GetCard(P, 5) ) .
 
 endfm
