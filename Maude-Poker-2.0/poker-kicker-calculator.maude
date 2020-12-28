@@ -1,0 +1,44 @@
+fmod POKER-KICKER-CALCULATOR is
+
+	including POKER-POINT .
+	including POKER-GAME-PLATE .
+	including POKER-PLAYER-HAND .
+	including POKER-KICKER .
+	including POKER-LISTS-AND-SETS .
+
+	var PH : PlayerHand .
+	var PL : Plate .
+	var P : Point .
+	var S : Set{Nat} .
+
+	vars X Y Z U V W J : Card .
+
+	*** Get the union of the player hand and the plate (without repetitions of elements)
+	op GetAsSet : PlayerHand Plate -> Set{Nat} .
+
+	eq GetAsSet(PH, PL) = union(GetAsSet(PH), GetAsSet(PL)) .
+
+
+	*** Delete the point cards from the set
+	op DeletePointFromSet : Set{Nat} Point -> Set{Nat} .
+
+	eq DeletePointFromSet(S, HCard) = S .
+
+	eq DeletePointFromSet(S, Pairs(X)) = delete(ToNat(CardNum(X)), S) .
+	eq DeletePointFromSet(S, Tris(X)) = delete(ToNat(CardNum(X)), S) .
+	eq DeletePointFromSet(S, Poker(X)) = delete(ToNat(CardNum(X)), S) .
+
+	eq DeletePointFromSet(S, Full(Pairs(X), Tris(Y))) = S \ ( ToNat(CardNum(X)), ToNat(CardNum(Y)) ) .
+	eq DeletePointFromSet(S, DPairs(X, Y)) = S \ ( ToNat(CardNum(X)), ToNat(CardNum(Y)) ) .
+
+	*** Get the set as a sortable list (sorted from higher to lower)
+	op GetSetAsList : Set{Nat} -> List{Nat<} .
+
+	eq GetSetAsList(S) = makeList(S) .
+
+	*** Get the kicker
+	op GetKicker : PlayerHand Plate Point -> Kicker .
+
+	eq GetKicker(PH, PL, P) = GetKicker( GetSetAsList( DeletePointFromSet( GetAsSet(PH, PL), P) ) ) .
+
+endfm

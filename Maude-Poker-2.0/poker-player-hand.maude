@@ -1,0 +1,69 @@
+fmod POKER-PLAYER-HAND is
+
+	including POKER-CARD .
+	protecting SET{Nat} .
+	sort PlayerHand .
+
+	op <> : -> PlayerHand [ctor] .
+	op <_,_> : Card Card -> PlayerHand [ctor] .
+	
+	vars X Y S T : Card .
+	var V W : PlayerHand .
+	var Z : Nat .
+	
+	*** Returns the 1st card if the Nat is 1, the second card owise.
+	op GetCard : PlayerHand Nat -> Card .
+	
+	ceq GetCard(< X , Y >, Z) = X if Z == 1 .
+	eq GetCard(< X , Y >, Z) = Y [owise] .
+	
+	*** Returns the greatest card of a hand.
+	op GetGreatestCard : PlayerHand -> Card .
+	
+	ceq GetGreatestCard(W) = GetCard(W, 1) if GetCard(W, 1) > GetCard(W, 2) .
+	eq GetGreatestCard(W) = GetCard(W, 2) [owise] .
+	
+	*** Returns the lowest card of a hand.
+	op GetLowestCard : PlayerHand -> Card .
+	
+	ceq GetLowestCard(W) = GetCard(W, 1) if GetCard(W, 1) < GetCard(W, 2) .
+	eq GetLowestCard(W) = GetCard(W, 2) [owise] .
+	
+	*** Operations to confront hands
+	ops _equals_ _>_ _<_ : PlayerHand PlayerHand -> Bool .
+	
+	ceq _equals_(V, W) = false if V > W or V < W .
+	eq _equals_(V, W) = true [owise] .
+	
+	ceq _>_(V, W) = true if GetGreatestCard(V) > GetGreatestCard(W) .
+	ceq _>_(V, W) = true if GetGreatestCard(V) equals GetGreatestCard(W) and GetLowestCard(V) > GetLowestCard(W) .
+	eq _>_(V, W) = false [owise] .
+
+	ceq _<_(V, W) = true if GetGreatestCard(V) < GetGreatestCard(W) .
+	ceq _<_(V, W) = true if GetGreatestCard(V) equals GetGreatestCard(W) and GetLowestCard(V) < GetLowestCard(W) .
+	eq _<_(V, W) = false [owise] .
+	
+	*** Check pairs
+	op HasPairs : PlayerHand -> Bool .
+	
+	ceq HasPairs(V) = true if GetCard(V, 1) equals GetCard(V, 2) .
+	eq HasPairs(V) = false [owise] .
+	
+	*** Check flush
+	op HasFlushPair : PlayerHand -> Bool .
+	
+	ceq HasFlushPair(V) = true if GetCard(V, 1) =f= GetCard(V, 2) .
+	eq HasFlushPair(V) = false [owise] .
+	
+	*** Check No point in hand .
+	op NoPoints : PlayerHand -> Bool .
+	
+	ceq NoPoints(V) = true if HasFlushPair(V) == false and HasPairs(V) == false .
+	eq NoPoints(V) = false [owise] .
+
+	*** Get a Player Hand as a Set of Nat
+	op GetAsSet : PlayerHand -> Set{Nat} .
+
+	eq GetAsSet(V) = ( ToNat(CardNum(GetCard(V, 1))), ToNat(CardNum(GetCard(V, 2))) ) .
+
+endfm

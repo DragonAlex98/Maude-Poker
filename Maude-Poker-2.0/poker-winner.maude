@@ -1,0 +1,32 @@
+fmod POKER-WINNER is
+	including POKER-FINAL-HAND-BUILDER .
+	including POKER-PLAYER .
+	sorts Winner PokerGame .
+	subsort Player < Winner .
+
+	*** Creates a poker game with the players and the plate .
+	op _vs_plate_ : Player Player Plate -> PokerGame .
+
+	*** Returns p1, p2 or plate of this game	
+	ops GetP1 GetP2 : PokerGame -> Player .
+	op GetPlate : PokerGame -> Plate .
+	
+	vars F L : Player .
+	var P : Plate .
+	var G : PokerGame .
+	
+	eq GetP1(F vs L plate P) = F .
+	eq GetP2(F vs L plate P) = L .
+	eq GetPlate(F vs L plate P) = P .	
+
+	op _/_ : Player Point -> Winner [ctor] .
+	op Draw : -> Winner [ctor] .
+
+	*** Returns the winner
+	op Winner : PokerGame -> Winner .
+
+	ceq Winner(F vs L plate P) = F / EvaluateHand(GetPlayerHand(F), P) if GetFHand(GetPlayerHand(F), P) > GetFHand(GetPlayerHand(L), P) .
+	ceq Winner(F vs L plate P) = L / EvaluateHand(GetPlayerHand(L), P) if GetFHand(GetPlayerHand(F), P) < GetFHand(GetPlayerHand(L), P) .
+	eq Winner(F vs L plate P) = Draw [owise] .
+
+endfm

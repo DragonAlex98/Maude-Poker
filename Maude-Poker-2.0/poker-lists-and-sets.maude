@@ -1,0 +1,20 @@
+fmod POKER-LISTS-AND-SETS is
+	protecting SET{Nat} .
+	protecting SORTABLE-LIST{Nat<} .
+
+	var E : Nat .
+	var L : List{Nat<} .
+	var S : Set{Nat} .
+
+	op makeList : Set{Nat} -> List{Nat<} .
+	op makeList : NeSet{Nat} -> NeList{Nat<} .
+	eq makeList(S) = $makeList(S, nil) .
+
+	op $makeList : Set{Nat} List{Nat<} -> List{Nat<} .
+	op $makeList : NeSet{Nat} List{Nat<} -> NeList{Nat<} .
+	op $makeList : Set{Nat} NeList{Nat<} -> NeList{Nat<} .
+	eq $makeList(empty, L) = L .
+	eq $makeList((E, E, S), L) = $makeList((E, S), L) .
+	eq $makeList((E, S), L) = $makeList(S, E L) [owise] .
+
+endfm

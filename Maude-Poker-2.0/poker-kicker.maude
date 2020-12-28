@@ -1,0 +1,71 @@
+fmod POKER-KICKER is
+
+	including POKER-CARD .
+	pr SORTABLE-LIST{Nat<} .
+	sort Kicker .
+	subsort NeList{Nat<} < Kicker .
+
+	vars A B C D E F G : Card .
+	vars H I : Kicker .
+	vars L : NeList{Nat<} .
+
+	op GetKicker : NeList{Nat<} -> Kicker [ctor] .
+	eq GetKicker(L) = reverse(sort(L)) .
+	ops _k>_ _k<_ _p>_ _p<_ _dp>_ _dp<_ _t>_ _t<_ : Kicker Kicker -> Bool .
+	ops _p==_ _p==_ _dp==_ _dp==_ _t==_ _t==_ : Kicker Kicker -> Bool .
+
+	ops GetHigher GetSecondHigher GetThirdHigher GetFourthHigher GetFifthHigher : Kicker -> Nat .
+	eq GetHigher(H) = head(H) .
+	eq GetSecondHigher(H) = head(tail(H)) . 
+	eq GetThirdHigher(H) = head(tail(tail(H))) .
+	eq GetFourthHigher(H) = head(tail(tail(tail(H)))) .
+	eq GetFifthHigher(H) = head(tail(tail(tail(tail(H))))) .
+
+	*** Compare Pairs' Kickers
+	ceq _p==_(H, I) = true if GetHigher(H) == GetHigher(I) and GetSecondHigher(H) == GetSecondHigher(I) and GetThirdHigher(H) == GetThirdHigher(I) .
+	eq _p==_(H, I) = false [owise] .
+
+	*** Compare DPairs' Kickers
+	ceq _dp==_(H, I) = true if GetHigher(H) == GetHigher(I) .
+	eq _dp==_(H, I) = false [owise] .
+
+	*** Compare Tris' Kickers
+	ceq _t==_(H, I) = true if GetHigher(H) == GetHigher(I) and GetSecondHigher(H) == GetSecondHigher(I) .
+	eq _t==_(H, I) = false [owise] .
+
+	*** Compare HCard's Kickers
+	ceq _k>_(H, I) = true if GetHigher(H) > GetHigher(I) .
+	ceq _k>_(H, I) = true if GetHigher(H) == GetHigher(I) and GetSecondHigher(H) > GetSecondHigher(I) .
+	ceq _k>_(H, I) = true if GetHigher(H) == GetHigher(I) and GetSecondHigher(H) == GetSecondHigher(I) and GetThirdHigher(H) > GetThirdHigher(I) .
+	ceq _k>_(H, I) = true if GetHigher(H) == GetHigher(I) and GetSecondHigher(H) == GetSecondHigher(I) and GetThirdHigher(H) == GetThirdHigher(I) and GetFourthHigher(H) > GetFourthHigher(I) .
+	ceq _k>_(H, I) = true if GetHigher(H) == GetHigher(I) and GetSecondHigher(H) == GetSecondHigher(I) and GetThirdHigher(H) == GetThirdHigher(I) and GetFourthHigher(H) == GetFourthHigher(I) and GetFifthHigher(H) > GetFifthHigher(I) .
+	eq _k>_(H, I) = false [owise] .
+
+	ceq _k<_(H, I) = true if H =/= I and not H k> I .
+	eq _k<_(H, I) = false [owise] .
+
+	*** Compare Pairs' Kickers
+	ceq _p>_(H, I) = true if GetHigher(H) > GetHigher(I) .
+	ceq _p>_(H, I) = true if GetHigher(H) == GetHigher(I) and GetSecondHigher(H) > GetSecondHigher(I) .
+	ceq _p>_(H, I) = true if GetHigher(H) == GetHigher(I) and GetSecondHigher(H) == GetSecondHigher(I) and GetThirdHigher(H) > GetThirdHigher(I) .
+	eq _p>_(H, I) = false [owise] .
+
+	ceq _p<_(H, I) = true if not H p== I and not H p> I .
+	eq _p<_(H, I) = false [owise] .
+
+	*** Compare DPairs' Kickers
+	ceq _dp>_(H, I) = true if GetHigher(H) > GetHigher(I) .
+	eq _dp>_(H, I) = false [owise] .
+
+	ceq _dp<_(H, I) = true if not H dp== I and not H dp> I .
+	eq _dp<_(H, I) = false [owise] .
+
+	*** Compare Tris' Kickers
+	ceq _t>_(H, I) = true if GetHigher(H) > GetHigher(I) .
+	ceq _t>_(H, I) = true if GetHigher(H) == GetHigher(I) and GetSecondHigher(H) > GetSecondHigher(I) .
+	eq _t>_(H, I) = false [owise] .
+
+	ceq _t<_(H, I) = true if not H t== I and not H t> I .
+	eq _t<_(H, I) = false [owise] .
+
+endfm
