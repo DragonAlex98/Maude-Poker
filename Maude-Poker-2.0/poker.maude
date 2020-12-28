@@ -1,3 +1,4 @@
+load poker-lists-and-sets
 load poker-card-number
 load poker-card
 load poker-player-hand
@@ -5,7 +6,6 @@ load poker-player
 load poker-point
 load poker-game-plate
 load poker-kicker
-load poker-lists-and-sets
 load poker-final-hand
 load poker-points-calculator
 load poker-kicker-calculator

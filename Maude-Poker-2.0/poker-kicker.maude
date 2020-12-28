@@ -3,7 +3,7 @@ fmod POKER-KICKER is
 	including POKER-CARD .
 	pr SORTABLE-LIST{Nat<} .
 	sort Kicker .
-	subsort NeList{Nat<} < Kicker .
+	subsort List{Nat<} < Kicker .
 
 	vars A B C D E F G : Card .
 	vars H I : Kicker .
@@ -12,7 +12,7 @@ fmod POKER-KICKER is
 	op GetKicker : NeList{Nat<} -> Kicker [ctor] .
 	eq GetKicker(L) = reverse(sort(L)) .
 	ops _k>_ _k<_ _p>_ _p<_ _dp>_ _dp<_ _t>_ _t<_ : Kicker Kicker -> Bool .
-	ops _p==_ _p==_ _dp==_ _dp==_ _t==_ _t==_ : Kicker Kicker -> Bool .
+	ops _p==_ _p==_ _dp==_ _dp==_ _t==_ _t==_ _k==_ : Kicker Kicker -> Bool .
 
 	ops GetHigher GetSecondHigher GetThirdHigher GetFourthHigher GetFifthHigher : Kicker -> Nat .
 	eq GetHigher(H) = head(H) .
@@ -33,7 +33,10 @@ fmod POKER-KICKER is
 	ceq _t==_(H, I) = true if GetHigher(H) == GetHigher(I) and GetSecondHigher(H) == GetSecondHigher(I) .
 	eq _t==_(H, I) = false [owise] .
 
-	*** Compare HCard's Kickers
+	ceq _k==_(H, I) = true if GetHigher(H) == GetHigher(I) and GetSecondHigher(H) == GetSecondHigher(I) and GetThirdHigher(H) == GetThirdHigher(I) and GetFourthHigher(H) == GetFourthHigher(I) and GetFifthHigher(H) == GetFifthHigher(I) .
+	eq _k==_(H, I) = false [owise] .
+
+	*** Compare HCard's Kickers (used also for Flush comparison)
 	ceq _k>_(H, I) = true if GetHigher(H) > GetHigher(I) .
 	ceq _k>_(H, I) = true if GetHigher(H) == GetHigher(I) and GetSecondHigher(H) > GetSecondHigher(I) .
 	ceq _k>_(H, I) = true if GetHigher(H) == GetHigher(I) and GetSecondHigher(H) == GetSecondHigher(I) and GetThirdHigher(H) > GetThirdHigher(I) .
@@ -41,7 +44,7 @@ fmod POKER-KICKER is
 	ceq _k>_(H, I) = true if GetHigher(H) == GetHigher(I) and GetSecondHigher(H) == GetSecondHigher(I) and GetThirdHigher(H) == GetThirdHigher(I) and GetFourthHigher(H) == GetFourthHigher(I) and GetFifthHigher(H) > GetFifthHigher(I) .
 	eq _k>_(H, I) = false [owise] .
 
-	ceq _k<_(H, I) = true if H =/= I and not H k> I .
+	ceq _k<_(H, I) = true if not H k== I and not H k> I .
 	eq _k<_(H, I) = false [owise] .
 
 	*** Compare Pairs' Kickers

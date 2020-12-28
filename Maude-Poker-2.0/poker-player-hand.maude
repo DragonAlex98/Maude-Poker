@@ -1,14 +1,14 @@
 fmod POKER-PLAYER-HAND is
 
 	including POKER-CARD .
-	protecting SET{Nat} .
-	protecting LIST{Card} .
+	including POKER-LISTS-AND-SETS .
 	sort PlayerHand .
 
 	op <> : -> PlayerHand [ctor] .
 	op <_,_> : Card Card -> PlayerHand [ctor] .
 	
 	vars X Y S T : Card .
+	var G : Suit .
 	var V W : PlayerHand .
 	var Z : Nat .
 	
@@ -17,6 +17,12 @@ fmod POKER-PLAYER-HAND is
 	
 	ceq GetCard(< X , Y >, Z) = X if Z == 1 .
 	eq GetCard(< X , Y >, Z) = Y [owise] .
+
+	*** Returns the 1st card if the Nat is 1, the second card owise.
+	op GetFlushOfCard : PlayerHand Nat -> Suit .
+	
+	ceq GetFlushOfCard(< X , Y >, Z) = CardSuit(X) if Z == 1 .
+	eq GetFlushOfCard(< X , Y >, Z) = CardSuit(Y) [owise] .
 	
 	*** Returns the greatest card of a hand.
 	op GetGreatestCard : PlayerHand -> Card .
@@ -55,6 +61,11 @@ fmod POKER-PLAYER-HAND is
 	
 	ceq HasFlushPair(V) = true if GetCard(V, 1) =f= GetCard(V, 2) .
 	eq HasFlushPair(V) = false [owise] .
+
+	*** Get flush
+	op GetFlushPair : PlayerHand -> Suit .
+	
+	ceq GetFlushPair(V) = CardSuit(GetCard(V, 1)) if GetCard(V, 1) =f= GetCard(V, 2) .
 	
 	*** Check No point in hand .
 	op NoPoints : PlayerHand -> Bool .
@@ -68,8 +79,15 @@ fmod POKER-PLAYER-HAND is
 	eq GetAsSet(V) = ( ToNat(CardNum(GetCard(V, 1))), ToNat(CardNum(GetCard(V, 2))) ) .
 
 	*** Get a Player Hand as a List of Card
-	op GetAsList : PlayerHand -> List{Card} .
+	op GetAsList : PlayerHand -> List{Nat<} .
 
-	eq GetAsList(V) = ( GetCard(V, 1) GetCard(V, 2) ) .
+	eq GetAsList(V) = ( ToNat(CardNum(GetCard(V, 1))) ToNat(CardNum(GetCard(V, 2))) ) .
+
+	op GetAsListOfFlush : PlayerHand Suit -> List{Nat<} .
+
+	ceq GetAsListOfFlush(V, G) = GetAsList(V) if CardSuit(GetCard(V, 1)) == G and CardSuit(GetCard(V, 2)) == G .
+	ceq GetAsListOfFlush(V, G) = ( ToNat(CardNum(GetCard(V, 1))) ) if CardSuit(GetCard(V, 1)) == G and not CardSuit(GetCard(V, 2)) == G .
+	ceq GetAsListOfFlush(V, G) = ( ToNat(CardNum(GetCard(V, 2))) ) if not CardSuit(GetCard(V, 1)) == G and CardSuit(GetCard(V, 2)) == G .
+	eq GetAsListOfFlush(V, G) = nil [owise] .
 
 endfm

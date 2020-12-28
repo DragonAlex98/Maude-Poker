@@ -12,6 +12,8 @@ fmod POKER-FINAL-HAND is
 	vars K X : Kicker .
 	vars N D : FinalHand .
 	vars M O J I : Card .
+	vars G L : Suit .
+	var B F : Nat .
 
 	eq GetPoint(P # K) = P .
 
@@ -24,6 +26,8 @@ fmod POKER-FINAL-HAND is
 	ceq _>_(DPairs(M, J) # K, DPairs(O, I) # X) = true if DPairs(M, J) == DPairs(O, I) and K dp> X .
 	ceq _>_(Tris(M) # K, Tris(O) # X) = true if Tris(M) > Tris(O) .
 	ceq _>_(Tris(M) # K, Tris(O) # X) = true if Tris(M) == Tris(O) and K t> X .
+	ceq _>_(Straight(B) # K, Straight(F) # X) = true if B > F .
+	ceq _>_(Flush(G) # K, Flush(L) # X) = true if K k> X .
 	ceq _>_(Full(Tris(M), Pairs(J)) # K, Full(Tris(O), Pairs(I)) # X) = true if Full(Tris(M), Pairs(J)) > Full(Tris(O), Pairs(I)) .
 	ceq _>_(Poker(M) # K, Poker(O) # X) = true if Poker(M) > Poker(O) .
 	eq _>_(P # K, Y # X) = false [owise] .
@@ -33,6 +37,8 @@ fmod POKER-FINAL-HAND is
 	ceq _equals_(Pairs(M) # K, Pairs(O) # X) = true if Pairs(M) == Pairs(O) and K p== X .
 	ceq _equals_(DPairs(M, J) # K, DPairs(O, I) # X) = true if DPairs(M, J) == DPairs(O, I) and K dp== X .
 	ceq _equals_(Tris(M) # K, Tris(O) # X) = true if Tris(M) == Tris(O) and K t== X .
+	ceq _equals_(Straight(B) # K, Straight(F) # X) = true if B == F .
+	ceq _equals_(Flush(G) # K, Flush(L) # X) = true if K k== X .
 	eq _equals_(N, D) = false [owise] .
 
 	ceq _<_(N, D) = true if not N equals D and not N > D .

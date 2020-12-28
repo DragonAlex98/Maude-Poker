@@ -9,7 +9,9 @@ fmod POKER-KICKER-CALCULATOR is
 	var PH : PlayerHand .
 	var PL : Plate .
 	var P : Point .
+	var G : Suit .
 	var S : Set{Nat} .
+	var N : Nat .
 
 	vars X Y Z U V W J : Card .
 
@@ -17,6 +19,11 @@ fmod POKER-KICKER-CALCULATOR is
 	op GetAsSet : PlayerHand Plate -> Set{Nat} .
 
 	eq GetAsSet(PH, PL) = union(GetAsSet(PH), GetAsSet(PL)) .
+
+	*** Get the union of the player hand and the plate (without repetitions of elements)
+	op GetAsFlushList : PlayerHand Plate Suit -> List{Nat<} .
+
+	eq GetAsFlushList(PH, PL, G) = append(GetAsListOfFlush(PH, G), GetAsListOfFlush(PL, G)) .
 
 
 	*** Delete the point cards from the set
@@ -28,7 +35,7 @@ fmod POKER-KICKER-CALCULATOR is
 	eq DeletePointFromSet(S, Tris(X)) = delete(ToNat(CardNum(X)), S) .
 	eq DeletePointFromSet(S, Poker(X)) = delete(ToNat(CardNum(X)), S) .
 
-	eq DeletePointFromSet(S, Full(Pairs(X), Tris(Y))) = S \ ( ToNat(CardNum(X)), ToNat(CardNum(Y)) ) .
+	eq DeletePointFromSet(S, Full(Tris(Y), Pairs(X))) = S \ ( ToNat(CardNum(X)), ToNat(CardNum(Y)) ) .
 	eq DeletePointFromSet(S, DPairs(X, Y)) = S \ ( ToNat(CardNum(X)), ToNat(CardNum(Y)) ) .
 
 	*** Get the set as a sortable list (sorted from higher to lower)
@@ -39,6 +46,8 @@ fmod POKER-KICKER-CALCULATOR is
 	*** Get the kicker
 	op GetKicker : PlayerHand Plate Point -> Kicker .
 
+	eq GetKicker(PH, PL, Flush(G)) = GetKicker( GetAsFlushList(PH, PL, G) ) .
+	eq GetKicker(PH, PL, Straight(N)) = nil .
 	eq GetKicker(PH, PL, P) = GetKicker( GetSetAsList( DeletePointFromSet( GetAsSet(PH, PL), P) ) ) .
 
 endfm
