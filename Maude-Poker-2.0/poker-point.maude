@@ -4,7 +4,7 @@ fmod POKER-POINT is
 	sort Point .
 
 	op ToNat : Point -> Nat .
-	ops _>_ _<_ : Point Point -> Bool .
+	ops _>_ _<_ _equals_ : Point Point -> Bool .
 
 	vars X Y : Point .
 	vars Z V W L M : Card .
@@ -45,12 +45,21 @@ fmod POKER-POINT is
 	ceq _>_(Tris(Z), Tris(V)) = true if Z > V .
 	ceq _>_(Straight(T), Straight(R)) = true if T > R .
 	ceq _>_(Full(Tris(Z), Pairs(V)), Full(Tris(W), Pairs(L))) = true if Tris(Z) > Tris(W) .
-	ceq _>_(Full(Tris(Z), Pairs(V)), Full(Tris(W), Pairs(L))) = true if Tris(Z) == Tris(W) and Pairs(V) > Pairs(L) .
+	ceq _>_(Full(Tris(Z), Pairs(V)), Full(Tris(W), Pairs(L))) = true if Tris(Z) equals Tris(W) and Pairs(V) > Pairs(L) .
 	ceq _>_(Poker(Z), Poker(V)) = true if Z > V .
 	ceq _>_(X, Y) = true if ToNat(X) > ToNat(Y) .
 	eq _>_(X, Y) = false [owise] .
+
+	ceq _equals_(Pairs(Z), Pairs(V)) = true if Z equals V .
+	ceq _equals_(DPairs(Z, V), DPairs(W, L)) = true if Z equals W and V equals L .
+	ceq _equals_(DPairs(Z, V), DPairs(W, L)) = true if Z equals L and V equals W .
+	ceq _equals_(Tris(Z), Tris(V)) = true if Z equals V .
+	ceq _equals_(Straight(T), Straight(R)) = true if T == R .
+	ceq _equals_(Full(Tris(Z), Pairs(V)), Full(Tris(W), Pairs(L))) = true if Tris(Z) equals Tris(W) and Pairs(V) equals Pairs(L) .
+	ceq _equals_(Poker(Z), Poker(V)) = true if Z equals V .
+	eq _equals_(X, Y) = false [owise] .
 	
-	ceq _<_(X, Y) = true if not X > Y and X =/= Y .
+	ceq _<_(X, Y) = true if not X > Y and not X equals Y .
 	eq _<_(X, Y) = false [owise] .
 
 endfm
