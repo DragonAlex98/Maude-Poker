@@ -8,10 +8,12 @@ fmod POKER-POINT is
 
 	vars X Y : Point .
 	vars Z V W L M : Card .
+	vars T R : Nat .
 
 	*** Points
 	op HCard : -> Point [ctor] .
 	ops Pairs Tris Poker : Card -> Point [ctor] .
+	op Straight : Nat -> Point [ctor] .
 	op DPairs : Card Card -> Point [ctor] .
 	op Flush : -> Point [ctor] .
 	op Full : Point Point -> Point [ctor] .
@@ -32,6 +34,7 @@ fmod POKER-POINT is
 	eq ToNat(Pairs(Z)) = 2 .
 	eq ToNat(DPairs(Z, V)) = 3 .
 	eq ToNat(Tris(Z)) = 4 .
+	eq ToNat(Straight(T)) = 5 .
 	eq ToNat(Flush) = 6 .
 	eq ToNat(Full(Tris(Z), Pairs(V))) = 7 .
 	eq ToNat(Poker(Z)) = 8 .
@@ -40,13 +43,14 @@ fmod POKER-POINT is
 	ceq _>_(DPairs(Z, V), DPairs(W, L)) = true if GetHigherCard(Z, V) > GetHigherCard(W, L) . *** A 3 | A K ?
 	ceq _>_(DPairs(Z, V), DPairs(W, L)) = true if GetHigherCard(Z, V) equals GetHigherCard(W, L) and GetLowerCard(Z, V) > GetLowerCard(W, L) .
 	ceq _>_(Tris(Z), Tris(V)) = true if Z > V .
+	ceq _>_(Straight(T), Straight(R)) = true if T > R .
 	ceq _>_(Full(Tris(Z), Pairs(V)), Full(Tris(W), Pairs(L))) = true if Tris(Z) > Tris(W) .
 	ceq _>_(Full(Tris(Z), Pairs(V)), Full(Tris(W), Pairs(L))) = true if Tris(Z) == Tris(W) and Pairs(V) > Pairs(L) .
 	ceq _>_(Poker(Z), Poker(V)) = true if Z > V .
 	ceq _>_(X, Y) = true if ToNat(X) > ToNat(Y) .
 	eq _>_(X, Y) = false [owise] .
 	
-	ceq _<_(X, Y) = true if not X > Y .
+	ceq _<_(X, Y) = true if not X > Y and X =/= Y .
 	eq _<_(X, Y) = false [owise] .
 
 endfm

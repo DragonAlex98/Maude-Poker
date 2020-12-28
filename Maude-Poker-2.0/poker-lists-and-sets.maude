@@ -17,4 +17,6 @@ fmod POKER-LISTS-AND-SETS is
 	eq $makeList((E, E, S), L) = $makeList((E, S), L) .
 	eq $makeList((E, S), L) = $makeList(S, E L) [owise] .
 
+	op getHigher : List{Nat<} -> Nat .
+	eq getHigher(L) = head(L) . 
 endfm
