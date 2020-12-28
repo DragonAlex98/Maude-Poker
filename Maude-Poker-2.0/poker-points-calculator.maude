@@ -4,10 +4,15 @@ fmod POKER-POINTS-CALCULATOR is
 	including POKER-POINT .
 	including POKER-PLAYER-HAND .
 	including POKER-GAME-PLATE .
+	including POKER-LISTS-AND-SETS .
 	
 	*** vars P L : Player .
 	vars X Y : PlayerHand .
 	vars Z : Plate .
+
+	op GetAsList : PlayerHand Plate -> List{Nat<} .
+
+	eq GetAsList(X, Z) = makeList( GetAsSet(X), GetAsSet(Z) ) .
 
 	*** Check pairs
 	ops CheckPairs CheckDPairs CheckTris Flush CheckFull CheckPoker : PlayerHand Plate -> Point .
