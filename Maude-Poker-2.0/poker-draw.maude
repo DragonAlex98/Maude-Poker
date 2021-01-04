@@ -1,6 +1,0 @@
-mod POKER-DRAW is
-	protecting POKER-DECK .
-
-	var D : Deck .
-	crl [drawRule] : D => draw(D) if length(D) > 0 .
-endm

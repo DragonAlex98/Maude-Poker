@@ -2,7 +2,6 @@ load poker-lists-and-sets
 load poker-card-number
 load poker-card
 load poker-deck
-load poker-draw
 load poker-player-hand
 load poker-player
 load poker-point
@@ -19,7 +18,6 @@ mod POKER is
 	pr POKER-CARD-NUMBER .
 	pr POKER-CARD .
 	pr POKER-DECK .
-	pr POKER-DRAW .
 	pr POKER-PLAYER-HAND .
 	pr POKER-POINT .
 	pr POKER-GAME-PLATE .
@@ -30,4 +28,24 @@ mod POKER is
 	pr POKER-FINAL-HAND-BUILDER .
 	pr POKER-PLAYER .
 	pr POKER-WINNER .
+
+	var P1 P2 : Player .
+    var Pl : Plate .
+    var L : Deck .
+	
+	sort State .
+	op __ : Player Deck -> State [ctor] .
+	
+	op isSuccess : State -> Bool .
+	ceq isSuccess(P1 L) = true if length(L) == 50 and GetPlayerHand(P1) =/= <> .
+	eq isSuccess(P1 L) = false [owise] .
+
+	op drawRule : Deck -> [ReturnedDeckAndCard] .
+	rl drawRule(D:Deck) => remove(D:Deck, random(length(D:Deck)) rem length(D:Deck)) .
+    
+    crl [initial] : P1 L => P1(< getReturnedCard(drawRule(L)) , getReturnedCard(drawRule(getReturnedDeck(drawRule(L)))) >) getReturnedDeck(drawRule(getReturnedDeck(drawRule(L)))) if GetPlayerHand(P1) == <> .
+    
+    crl [flop] : P1 L => P1 getReturnedDeck(drawRule(L)) if length(L) == 50 .
 endm
+
+***search P1(<>) init =>* P1:Player D:Deck such that isSuccess(P1:Player D:Deck) .
