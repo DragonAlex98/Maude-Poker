@@ -106,6 +106,7 @@ fmod POKER-POINTS-CALCULATOR is
 	ceq CheckFull(X, Z) = Full(CheckTris(X, Z), Pairs(GetFirstCardOf(CheckDPairs(X, Z)))) if ToNat(CheckDPairs(X, Z)) == 3 and ToNat(CheckTris(X, Z)) == 4 and not GetFirstCardOf(CheckDPairs(X, Z)) equals GetCardOf(CheckTris(X, Z)) .
 	ceq CheckFull(X, Z) = Full(CheckTris(X, Z), Pairs(GetSecondCardOf(CheckDPairs(X, Z)))) if ToNat(CheckDPairs(X, Z)) == 3 and ToNat(CheckTris(X, Z)) == 4 and not GetSecondCardOf(CheckDPairs(X, Z)) equals GetCardOf(CheckTris(X, Z)) .
 	ceq CheckFull(X, Z) = Full(GetTris(Z), CheckPairs(X, Z)) if HasPairs(X) and HasTris(Z) .
+	ceq CheckFull(X, Z) = GetFull(Z) if HasFull(Z) .
 	eq CheckFull(X, Z) = CheckFlush(X, Z) [owise] .
 
 	*** Check Poker

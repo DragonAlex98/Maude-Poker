@@ -138,6 +138,11 @@ fmod POKER-GAME-PLATE is
 	ceq HasFull(X Y Z V W) = true if HasDPairs(X Y Z V W) and HasTris(X Y Z V W) .
 	eq HasFull(X Y Z V W) = false [owise] .
 
+	op GetFull : Plate -> Point .
+
+	ceq GetFull(X Y Z V W) = Full(GetTris(X Y Z V W), Pairs(GetFirstCardOf(GetDPairs(X Y Z V W)))) if HasFull(X Y Z V W) and not GetFirstCardOf(GetDPairs(X Y Z V W)) equals GetCardOf(GetTris(X Y Z V W)) .
+	ceq GetFull(X Y Z V W) = Full(GetTris(X Y Z V W), Pairs(GetSecondCardOf(GetDPairs(X Y Z V W)))) if HasFull(X Y Z V W) and not GetSecondCardOf(GetDPairs(X Y Z V W)) equals GetCardOf(GetTris(X Y Z V W)) .
+	
 	*** Returns true if the plate has poker
 	op HasPoker : Plate -> Bool .
 
