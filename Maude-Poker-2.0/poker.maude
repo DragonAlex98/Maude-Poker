@@ -1,6 +1,8 @@
 load poker-lists-and-sets
 load poker-card-number
 load poker-card
+load poker-deck
+load poker-draw
 load poker-player-hand
 load poker-player
 load poker-point
@@ -12,10 +14,12 @@ load poker-kicker-calculator
 load poker-final-hand-builder
 load poker-winner
 
-fmod POKER is
+mod POKER is
 	pr POKER-LISTS-AND-SETS .
 	pr POKER-CARD-NUMBER .
 	pr POKER-CARD .
+	pr POKER-DECK .
+	pr POKER-DRAW .
 	pr POKER-PLAYER-HAND .
 	pr POKER-POINT .
 	pr POKER-GAME-PLATE .
@@ -26,4 +30,4 @@ fmod POKER is
 	pr POKER-FINAL-HAND-BUILDER .
 	pr POKER-PLAYER .
 	pr POKER-WINNER .
-endfm
+endm

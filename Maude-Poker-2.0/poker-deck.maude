@@ -1,0 +1,44 @@
+fmod POKER-DECK is
+	protecting POKER-CARD .
+	protecting INT .
+	protecting RANDOM .
+
+	sort Deck .
+	subsort Card < Deck .
+
+	op [] : -> Deck [ctor] .
+	op __ : Card Deck -> Deck [ctor] .
+	op tail : Deck -> Deck .
+	op head : Deck -> Deck .
+	op length : Deck -> Int .
+	op reverse : Deck -> Deck .
+	op remove : Deck Int -> Deck .
+
+	var C : Card .
+	var L : Deck .
+	var N : Int .
+
+	eq tail([]) = [] .
+	eq tail(C) = C .
+	eq tail(C L) = L .
+	eq head([]) = [] .
+	eq head(C) = C .
+	eq head(C L) = C .
+	eq length([]) = 0 .
+	ceq length(C) = 1 if C =/= [] .
+	ceq length(C) = 0 if C == [] .
+	eq length(C L) = length(C) + length(L) .
+
+	eq remove([], N) = [] .
+	ceq remove(C, N) = [] if N == 0 .
+	ceq remove(C, N) = C if N > 0 .
+	ceq remove(L, N) = tail(L) if N == 0 .
+	ceq remove(L, N) = head(L) remove(tail(L), N - 1) if N > 0 and length(tail(L)) > 1 .
+	ceq remove(L, N) = head(L) if N == 1 and length(tail(L)) == 1 .
+
+	op init : -> Deck .
+	eq init = [2 C] [3 C] [4 C] [5 C] [6 C] [7 C] [8 C] [9 C] [10 C] [J C] [Q C] [K C] [A C] [2 D] [3 D] [4 D] [5 D] [6 D] [7 D] [8 D] [9 D] [10 D] [J D] [Q D] [K D] [A D] [2 H] [3 H] [4 H] [5 H] [6 H] [7 H] [8 H] [9 H] [10 H] [J H] [Q H] [K H] [A H] [2 S] [3 S] [4 S] [5 S] [6 S] [7 S] [8 S] [9 S] [10 S] [J S] [Q S] [K S] [A S] .
+
+	op draw : Deck -> Deck .
+	eq draw(L) = remove(L, random(length(L)) rem length(L)) .
+endfm
