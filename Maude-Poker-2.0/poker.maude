@@ -34,18 +34,28 @@ mod POKER is
     var L : Deck .
 	
 	sort State .
-	op __ : Player Deck -> State [ctor] .
+	op ____ : Plate Player Player Deck -> State [ctor] .
+	op _____ : Plate Player Player Deck Winner -> State [ctor] .
 	
-	op isSuccess : State -> Bool .
-	ceq isSuccess(P1 L) = true if length(L) == 50 and GetPlayerHand(P1) =/= <> .
-	eq isSuccess(P1 L) = false [owise] .
+	***op isSuccess : State -> Bool .
+	***ceq isSuccess(P1 L) = true if length(L) == 50 and GetPlayerHand(P1) =/= <> .
+	***eq isSuccess(P1 L) = false [owise] .
 
 	op drawRule : Deck -> [ReturnedDeckAndCard] .
 	rl drawRule(D:Deck) => remove(D:Deck, random(length(D:Deck)) rem length(D:Deck)) .
     
-    crl [initial] : P1 L => P1(< getReturnedCard(drawRule(L)) , getReturnedCard(drawRule(getReturnedDeck(drawRule(L)))) >) getReturnedDeck(drawRule(getReturnedDeck(drawRule(L)))) if GetPlayerHand(P1) == <> .
+    crl [cardsToP1] : Pl P1 P2 L => Pl P1(< getReturnedCard(drawRule(L)) , getReturnedCard(drawRule(getReturnedDeck(drawRule(L)))) >) P2 getReturnedDeck(drawRule(getReturnedDeck(drawRule(L)))) if GetPlayerHand(P1) == <> .
     
-    crl [flop] : P1 L => P1 getReturnedDeck(drawRule(L)) if length(L) == 50 .
+    crl [cardsToP2] : Pl P1 P2 L => Pl P1 P2(< getReturnedCard(drawRule(L)) , getReturnedCard(drawRule(getReturnedDeck(drawRule(L)))) >) getReturnedDeck(drawRule(getReturnedDeck(drawRule(L)))) if GetPlayerHand(P2) == <> .
+    
+    crl [flop] : Pl P1 P2 L => getReturnedCard(drawRule(L)) getReturnedCard(drawRule(getReturnedDeck(drawRule(L)))) getReturnedCard(drawRule(getReturnedDeck(drawRule(getReturnedDeck(drawRule(L)))))) [] [] P1 P2 getReturnedDeck(drawRule(getReturnedDeck(drawRule(getReturnedDeck(drawRule(L)))))) if GetPlayerHand(P1) =/= <> and GetPlayerHand(P2) =/= <> and GetCard(Pl, 1) == [] and GetCard(Pl, 2) == [] and GetCard(Pl, 3) == [] .
+    
+    crl [turn] : Pl P1 P2 L => GetCard(Pl, 1) GetCard(Pl, 2) GetCard(Pl, 3) getReturnedCard(drawRule(L)) [] P1 P2 getReturnedDeck(drawRule(L)) if GetPlayerHand(P1) =/= <> and GetPlayerHand(P2) =/= <> and GetCard(Pl, 1) =/= [] and GetCard(Pl, 2) =/= [] and GetCard(Pl, 3) =/= [] and GetCard(Pl, 4) == [] .
+    
+    crl [river] : Pl P1 P2 L => GetCard(Pl, 1) GetCard(Pl, 2) GetCard(Pl, 3) GetCard(Pl, 4) getReturnedCard(drawRule(L)) P1 P2 getReturnedDeck(drawRule(L)) if GetPlayerHand(P1) =/= <> and GetPlayerHand(P2) =/= <> and GetCard(Pl, 1) =/= [] and GetCard(Pl, 2) =/= [] and GetCard(Pl, 3) =/= [] and GetCard(Pl, 4) =/= [] and GetCard(Pl, 5) == [] .
+    
+    crl [winner] : Pl P1 P2 L => Pl P1 P2 L Winner(P1 vs P2 plate Pl) if GetPlayerHand(P1) =/= <> and GetPlayerHand(P2) =/= <> and GetCard(Pl, 1) =/= [] and GetCard(Pl, 2) =/= [] and GetCard(Pl, 3) =/= [] and GetCard(Pl, 4) =/= [] and GetCard(Pl, 5) =/= [] .
+
 endm
 
 ***search P1(<>) init =>* P1:Player D:Deck such that isSuccess(P1:Player D:Deck) .
