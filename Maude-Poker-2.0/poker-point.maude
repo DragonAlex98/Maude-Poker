@@ -65,7 +65,7 @@ fmod POKER-POINT is
 	ceq _equals_(Poker(Z), Poker(V)) = true if Z equals V .
 	eq _equals_(X, Y) = false [owise] .
 	
-	ceq _<_(X, Y) = true if not X > Y and not X equals Y .
+	ceq _<_(X, Y) = true if not X equals Y and not X > Y .
 	eq _<_(X, Y) = false [owise] .
 
 endfm

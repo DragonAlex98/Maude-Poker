@@ -11,9 +11,8 @@ fmod POKER-DECK is
 	op tail : Deck -> Deck .
 	op head : Deck -> Deck .
 	op length : Deck -> Int .
-	op reverse : Deck -> Deck .
 
-	var C, D : Card .
+	var C : Card .
 	var L : Deck .
 	var N : Int .
 	var R : ReturnedDeckAndCard .

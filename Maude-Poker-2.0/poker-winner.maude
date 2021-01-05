@@ -14,6 +14,7 @@ fmod POKER-WINNER is
 	vars F L : Player .
 	var P : Plate .
 	var G : PokerGame .
+	var Pn : Point .
 	
 	eq GetP1(F vs L plate P) = F .
 	eq GetP2(F vs L plate P) = L .
@@ -24,6 +25,9 @@ fmod POKER-WINNER is
 
 	*** Returns the winner
 	op Winner : PokerGame -> Winner .
+
+	op GetWinner : Winner -> Nat .
+	eq GetWinner(F / Pn) = GetPlayerId(F) .
 
 	ceq Winner(F vs L plate P) = F / EvaluateHand(GetPlayerHand(F), P) if GetFHand(GetPlayerHand(F), P) > GetFHand(GetPlayerHand(L), P) .
 	ceq Winner(F vs L plate P) = L / EvaluateHand(GetPlayerHand(L), P) if GetFHand(GetPlayerHand(F), P) < GetFHand(GetPlayerHand(L), P) .
