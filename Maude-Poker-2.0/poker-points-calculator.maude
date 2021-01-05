@@ -14,9 +14,9 @@ fmod POKER-POINTS-CALCULATOR is
 	op GetAsList : PlayerHand Plate -> List{Nat<} .
 	eq GetAsList(X, Z) = sort( makeList( union(GetAsSet(X), GetAsSet(Z)) )  ).
 
-	*** Check pairs
 	ops CheckPairs CheckDPairs CheckTris CheckStraight CheckFlush CheckFull CheckPoker : PlayerHand Plate -> Point .
 	
+	*** Check pairs
 	ceq CheckPairs(X, Z) = Pairs(GetCard(X, 1)) if HasPairs(X) and NoPoints(Z) .
 	ceq CheckPairs(X, Z) = Pairs(GetCard(X, 1)) if HasCard(Z, GetCard(X, 1)) .
 	ceq CheckPairs(X, Z) = Pairs(GetCard(X, 2)) if HasCard(Z, GetCard(X, 2)) .
@@ -57,17 +57,18 @@ fmod POKER-POINTS-CALCULATOR is
 	ceq HasStraight(L) = true if size(L) == 7 and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) and s(head(tail(tail(tail(tail(L)))))) == head(tail(tail(tail(tail(tail(L)))))) and s(head(tail(tail(tail(tail(tail(L))))))) == last(L) .
 	*** size 7 scala 5 in mezzo
 	ceq HasStraight(L) = true if size(L) == 7 and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) and s(head(tail(tail(tail(tail(L)))))) == head(tail(tail(tail(tail(tail(L)))))) .
-	ceq HasStraight(L) = true if size(L) == 7 and last(L) == 14 and s(head(L)) == head(tail(L)) and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) .
+	***ceq HasStraight(L) = true if size(L) == 7 and last(L) == 14 and head(L) == 2 and head(tail(L)) == 3 and head(tail(tail(L))) == 4 and head(tail(tail(tail(L)))) == 5 .
 	*** size 6 scala 6
 	ceq HasStraight(L) = true if size(L) == 6 and s(head(L)) == head(tail(L)) and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) and s(head(tail(tail(tail(tail(L)))))) == head(tail(tail(tail(tail(tail(L)))))) .
 	*** size 6 scala primi 5 
 	ceq HasStraight(L) = true if size(L) == 6 and s(head(L)) == head(tail(L)) and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) .
 	*** size 6 scala ultimi 5
 	ceq HasStraight(L) = true if size(L) == 6 and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) and s(head(tail(tail(tail(tail(L)))))) == last(L) .
-	ceq HasStraight(L) = true if size(L) == 6 and last(L) == 14 and s(head(L)) == head(tail(L)) and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) .
+	***ceq HasStraight(L) = true if size(L) == 6 and last(L) == 14 and head(L) == 2 and head(tail(L)) == 3 and head(tail(tail(L))) == 4 and head(tail(tail(tail(L)))) == 5 .
 	*** size 5 scala da 5
 	ceq HasStraight(L) = true if size(L) == 5 and s(head(L)) == head(tail(L)) and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == last(L) .
-	ceq HasStraight(L) = true if size(L) == 5 and last(L) == 14 and s(head(L)) == head(tail(L)) and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) .
+	*** A2345
+	ceq HasStraight(L) = true if last(L) == 14 and head(L) == 2 and head(tail(L)) == 3 and head(tail(tail(L))) == 4 and head(tail(tail(tail(L)))) == 5 .
 	eq HasStraight(L) = false [owise] .
 
 	*** size 7 scala da 7

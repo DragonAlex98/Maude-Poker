@@ -222,6 +222,10 @@ fmod POKER-GAME-PLATE is
 
 	*** eq GetAsList(X Y Z V W) = X : Y : Z : V : W .
 
+	*** Get the greatest card of the plate
+	*** op GetGreatestCard : Plate -> Card .
+	***eq GetGreatestCard(X Y Z V W) = head(reverse(sort(GetAsList(X Y Z V W)))) .
+
 
 	*** Get a Plate as a Set of Nat
 	op GetAsSet : Plate -> Set{Nat} .

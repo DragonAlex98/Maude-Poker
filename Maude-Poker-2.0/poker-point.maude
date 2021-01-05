@@ -54,6 +54,7 @@ fmod POKER-POINT is
 	ceq _>_(X, Y) = true if ToNat(X) > ToNat(Y) .
 	eq _>_(X, Y) = false [owise] .
 
+	eq _equals_(HCard, HCard) = true .
 	ceq _equals_(Pairs(Z), Pairs(V)) = true if Z equals V .
 	ceq _equals_(DPairs(Z, V), DPairs(W, L)) = true if Z equals W and V equals L .
 	ceq _equals_(DPairs(Z, V), DPairs(W, L)) = true if Z equals L and V equals W .
