@@ -1,12 +1,16 @@
 fmod POKER-GAME-PLATE is
 	
 	including POKER-CARD .
+	including POKER-POINT .
+	including POKER-LISTS-AND-SETS .
+	*** protecting LIST{Card} .
 	sort Plate .
 	
 	*** Creates the plate
 	op _ _ _ _ _ : Card Card Card Card Card -> Plate [ctor] .
 	
 	vars X Y Z V W T : Card .
+	var G : Suit .
 	var L : Nat .
 	var P : Plate .
 	
@@ -40,6 +44,15 @@ fmod POKER-GAME-PLATE is
 	ceq HasPairs(X Y Z V W) = true if HasCard(X Y Z [] W, V) .
 	ceq HasPairs(X Y Z V W) = true if HasCard(X Y Z V [], W) .
 	eq HasPairs(X Y Z V W) = false [owise] .
+
+	op GetPairs : Plate -> Card .
+
+	ceq GetPairs(X Y Z V W) = X if HasCard([] Y Z V W, X) .
+	ceq GetPairs(X Y Z V W) = Y if HasCard(X [] Z V W, Y) .
+	ceq GetPairs(X Y Z V W) = Z if HasCard(X Y [] V W, Z) .
+	ceq GetPairs(X Y Z V W) = V if HasCard(X Y Z [] W, V) .
+	ceq GetPairs(X Y Z V W) = W if HasCard(X Y Z V [], W) .
+	*** eq GetPairs(X Y Z V W) = nil [owise] .
 
 	*** Vecchi HasPairs
 	*** ceq HasPairs(X Y Z V W) = true if X equals Y .
@@ -78,6 +91,19 @@ fmod POKER-GAME-PLATE is
 	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, V) and HasPairsOf(X Y Z V W, W) and not V equals W .
 	eq HasDPairs(X Y Z V W) = false [owise] .
 	
+	op GetDPairs : Plate -> Point .
+
+	ceq GetDPairs(X Y Z V W) = DPairs(X, Y) if HasPairsOf(X Y Z V W, X) and HasPairsOf(X Y Z V W, Y) and not X equals Y .
+	ceq GetDPairs(X Y Z V W) = DPairs(X, Z) if HasPairsOf(X Y Z V W, X) and HasPairsOf(X Y Z V W, Z) and not X equals Z .
+	ceq GetDPairs(X Y Z V W) = DPairs(X, V) if HasPairsOf(X Y Z V W, X) and HasPairsOf(X Y Z V W, V) and not X equals V .
+	ceq GetDPairs(X Y Z V W) = DPairs(X, W) if HasPairsOf(X Y Z V W, X) and HasPairsOf(X Y Z V W, W) and not X equals W .
+	ceq GetDPairs(X Y Z V W) = DPairs(Y, Z) if HasPairsOf(X Y Z V W, Y) and HasPairsOf(X Y Z V W, Z) and not Y equals Z .
+	ceq GetDPairs(X Y Z V W) = DPairs(Y, V) if HasPairsOf(X Y Z V W, Y) and HasPairsOf(X Y Z V W, V) and not Y equals V .
+	ceq GetDPairs(X Y Z V W) = DPairs(Y, W) if HasPairsOf(X Y Z V W, Y) and HasPairsOf(X Y Z V W, W) and not Y equals W .
+	ceq GetDPairs(X Y Z V W) = DPairs(Z, V) if HasPairsOf(X Y Z V W, Z) and HasPairsOf(X Y Z V W, V) and not Z equals V .
+	ceq GetDPairs(X Y Z V W) = DPairs(Z, W) if HasPairsOf(X Y Z V W, Z) and HasPairsOf(X Y Z V W, W) and not Z equals W .
+	ceq GetDPairs(X Y Z V W) = DPairs(V, W) if HasPairsOf(X Y Z V W, V) and HasPairsOf(X Y Z V W, W) and not V equals W .
+
 	*** Returns true if the plate has a tris
 	op HasTris : Plate -> Bool .
 	
@@ -98,12 +124,25 @@ fmod POKER-GAME-PLATE is
 	ceq HasTrisOf(X Y Z V W, T) = HasPairsOf(X Y Z V [], T) if T equals W .
 	eq HasTrisOf(X Y Z V W, T) = false [owise] .
 
+	op GetTris : Plate -> Point .
+
+	ceq GetTris(X Y Z V W) = Tris(X) if HasPairsOf([] Y Z V W, X) .
+	ceq GetTris(X Y Z V W) = Tris(Y) if HasPairsOf(X [] Z V W, Y) .
+	ceq GetTris(X Y Z V W) = Tris(Z) if HasPairsOf(X Y [] V W, Z) .
+	ceq GetTris(X Y Z V W) = Tris(V) if HasPairsOf(X Y Z [] W, V) .
+	ceq GetTris(X Y Z V W) = Tris(W) if HasPairsOf(X Y Z V [], W) .
+
 	*** Return true if the plate has full
 	op HasFull : Plate -> Bool .
 
 	ceq HasFull(X Y Z V W) = true if HasDPairs(X Y Z V W) and HasTris(X Y Z V W) .
 	eq HasFull(X Y Z V W) = false [owise] .
 
+	op GetFull : Plate -> Point .
+
+	ceq GetFull(X Y Z V W) = Full(GetTris(X Y Z V W), Pairs(GetFirstCardOf(GetDPairs(X Y Z V W)))) if HasFull(X Y Z V W) and not GetFirstCardOf(GetDPairs(X Y Z V W)) equals GetCardOf(GetTris(X Y Z V W)) .
+	ceq GetFull(X Y Z V W) = Full(GetTris(X Y Z V W), Pairs(GetSecondCardOf(GetDPairs(X Y Z V W)))) if HasFull(X Y Z V W) and not GetSecondCardOf(GetDPairs(X Y Z V W)) equals GetCardOf(GetTris(X Y Z V W)) .
+	
 	*** Returns true if the plate has poker
 	op HasPoker : Plate -> Bool .
 
@@ -113,6 +152,14 @@ fmod POKER-GAME-PLATE is
 	ceq HasPoker(X Y Z V W) = true if HasTrisOf(X Y Z [] W, V) .
 	ceq HasPoker(X Y Z V W) = true if HasTrisOf(X Y Z V [], W) .
 	eq HasPoker(X Y Z V W) = false [owise] .
+
+	op GetPoker : Plate -> Point .
+
+	ceq GetPoker(X Y Z V W) = Poker(X) if HasTrisOf([] Y Z V W, X) .
+	ceq GetPoker(X Y Z V W) = Poker(Y) if HasTrisOf(X [] Z V W, Y) .
+	ceq GetPoker(X Y Z V W) = Poker(Z) if HasTrisOf(X Y [] V W, Z) .
+	ceq GetPoker(X Y Z V W) = Poker(V) if HasTrisOf(X Y Z [] W, V) .
+	ceq GetPoker(X Y Z V W) = Poker(W) if HasTrisOf(X Y Z V [], W) .
 
 	*** Flush Part
 
@@ -161,5 +208,59 @@ fmod POKER-GAME-PLATE is
 	ceq HasFullFlush(X Y Z V W) = true if HasFlushPokerOf(X Y Z [] W, V) .
 	ceq HasFullFlush(X Y Z V W) = true if HasFlushPokerOf(X Y Z V [], W) .
 	eq HasFullFlush(X Y Z V W) = false [owise] .
+
+	*** Returns true if the plate has poker
+	op GetFullFlush : Plate -> Suit .
+
+	ceq GetFullFlush(X Y Z V W) = CardSuit(X) if HasFlushPokerOf([] Y Z V W, X) .
+	ceq GetFullFlush(X Y Z V W) = CardSuit(Y) if HasFlushPokerOf(X [] Z V W, Y) .
+	ceq GetFullFlush(X Y Z V W) = CardSuit(Z) if HasFlushPokerOf(X Y [] V W, Z) .
+	ceq GetFullFlush(X Y Z V W) = CardSuit(V) if HasFlushPokerOf(X Y Z [] W, V) .
+	ceq GetFullFlush(X Y Z V W) = CardSuit(W) if HasFlushPokerOf(X Y Z V [], W) .
+
+	*** op GetAsList : Plate -> NeList{Card} .
+
+	*** eq GetAsList(X Y Z V W) = X : Y : Z : V : W .
+
+	*** Get the greatest card of the plate
+	*** op GetGreatestCard : Plate -> Card .
+	***eq GetGreatestCard(X Y Z V W) = head(reverse(sort(GetAsList(X Y Z V W)))) .
+
+
+	*** Get a Plate as a Set of Nat
+	op GetAsSet : Plate -> Set{Nat} .
+
+	eq GetAsSet(X Y Z V W) = ( ToNat(CardNum(X)), ToNat(CardNum(Y)), ToNat(CardNum(Z)), ToNat(CardNum(V)), ToNat(CardNum(W)) ) .
+
+	*** Get a Plate as a List of Card
+	op GetAsList : Plate -> List{Nat<} .
+
+	eq GetAsList(P) = ( ToNat(CardNum(GetCard(P, 1))) ToNat(CardNum(GetCard(P, 2))) ToNat(CardNum(GetCard(P, 3))) ToNat(CardNum(GetCard(P, 4))) ToNat(CardNum(GetCard(P, 5))) ) .
+
+	op GetAsListOfFlush : Plate Suit -> List{Nat<} .
+
+	*** Tutte e 5 di quel colore
+	ceq GetAsListOfFlush(P, G) = GetAsList(P) if CardSuit(GetCard(P, 1)) == G and CardSuit(GetCard(P, 2)) == G and CardSuit(GetCard(P, 3)) == G and CardSuit(GetCard(P, 4)) == G and CardSuit(GetCard(P, 5)) == G .
+
+	*** 4 di quel colore
+	ceq GetAsListOfFlush(P, G) = ( ToNat(CardNum(GetCard(P, 1))) ToNat(CardNum(GetCard(P, 2))) ToNat(CardNum(GetCard(P, 3))) ToNat(CardNum(GetCard(P, 4))) ) if CardSuit(GetCard(P, 1)) == G and CardSuit(GetCard(P, 2)) == G and CardSuit(GetCard(P, 3)) == G and CardSuit(GetCard(P, 4)) == G .
+	ceq GetAsListOfFlush(P, G) = ( ToNat(CardNum(GetCard(P, 1))) ToNat(CardNum(GetCard(P, 2))) ToNat(CardNum(GetCard(P, 3))) ToNat(CardNum(GetCard(P, 5))) ) if CardSuit(GetCard(P, 1)) == G and CardSuit(GetCard(P, 2)) == G and CardSuit(GetCard(P, 3)) == G and CardSuit(GetCard(P, 5)) == G .
+	ceq GetAsListOfFlush(P, G) = ( ToNat(CardNum(GetCard(P, 1))) ToNat(CardNum(GetCard(P, 2))) ToNat(CardNum(GetCard(P, 4))) ToNat(CardNum(GetCard(P, 5))) ) if CardSuit(GetCard(P, 1)) == G and CardSuit(GetCard(P, 2)) == G and CardSuit(GetCard(P, 4)) == G and CardSuit(GetCard(P, 5)) == G .
+	ceq GetAsListOfFlush(P, G) = ( ToNat(CardNum(GetCard(P, 1))) ToNat(CardNum(GetCard(P, 3))) ToNat(CardNum(GetCard(P, 4))) ToNat(CardNum(GetCard(P, 5))) ) if CardSuit(GetCard(P, 1)) == G and CardSuit(GetCard(P, 3)) == G and CardSuit(GetCard(P, 4)) == G and CardSuit(GetCard(P, 5)) == G .
+	ceq GetAsListOfFlush(P, G) = ( ToNat(CardNum(GetCard(P, 2))) ToNat(CardNum(GetCard(P, 3))) ToNat(CardNum(GetCard(P, 4))) ToNat(CardNum(GetCard(P, 5))) ) if CardSuit(GetCard(P, 2)) == G and CardSuit(GetCard(P, 3)) == G and CardSuit(GetCard(P, 4)) == G and CardSuit(GetCard(P, 5)) == G .
+
+	*** 3 di quel colore
+	ceq GetAsListOfFlush(P, G) = ( ToNat(CardNum(GetCard(P, 1))) ToNat(CardNum(GetCard(P, 2))) ToNat(CardNum(GetCard(P, 3))) ) if CardSuit(GetCard(P, 1)) == G and CardSuit(GetCard(P, 2)) == G and CardSuit(GetCard(P, 3)) == G .
+	ceq GetAsListOfFlush(P, G) = ( ToNat(CardNum(GetCard(P, 1))) ToNat(CardNum(GetCard(P, 2))) ToNat(CardNum(GetCard(P, 4))) ) if CardSuit(GetCard(P, 1)) == G and CardSuit(GetCard(P, 2)) == G and CardSuit(GetCard(P, 4)) == G .
+	ceq GetAsListOfFlush(P, G) = ( ToNat(CardNum(GetCard(P, 1))) ToNat(CardNum(GetCard(P, 2))) ToNat(CardNum(GetCard(P, 5))) ) if CardSuit(GetCard(P, 1)) == G and CardSuit(GetCard(P, 2)) == G and CardSuit(GetCard(P, 5)) == G .
+	ceq GetAsListOfFlush(P, G) = ( ToNat(CardNum(GetCard(P, 1))) ToNat(CardNum(GetCard(P, 3))) ToNat(CardNum(GetCard(P, 4))) ) if CardSuit(GetCard(P, 1)) == G and CardSuit(GetCard(P, 3)) == G and CardSuit(GetCard(P, 4)) == G .
+	ceq GetAsListOfFlush(P, G) = ( ToNat(CardNum(GetCard(P, 1))) ToNat(CardNum(GetCard(P, 3))) ToNat(CardNum(GetCard(P, 5))) ) if CardSuit(GetCard(P, 1)) == G and CardSuit(GetCard(P, 3)) == G and CardSuit(GetCard(P, 5)) == G .
+	ceq GetAsListOfFlush(P, G) = ( ToNat(CardNum(GetCard(P, 1))) ToNat(CardNum(GetCard(P, 4))) ToNat(CardNum(GetCard(P, 5))) ) if CardSuit(GetCard(P, 1)) == G and CardSuit(GetCard(P, 4)) == G and CardSuit(GetCard(P, 5)) == G .
+	ceq GetAsListOfFlush(P, G) = ( ToNat(CardNum(GetCard(P, 2))) ToNat(CardNum(GetCard(P, 3))) ToNat(CardNum(GetCard(P, 4))) ) if CardSuit(GetCard(P, 2)) == G and CardSuit(GetCard(P, 3)) == G and CardSuit(GetCard(P, 4)) == G .
+	ceq GetAsListOfFlush(P, G) = ( ToNat(CardNum(GetCard(P, 2))) ToNat(CardNum(GetCard(P, 3))) ToNat(CardNum(GetCard(P, 5))) ) if CardSuit(GetCard(P, 2)) == G and CardSuit(GetCard(P, 3)) == G and CardSuit(GetCard(P, 5)) == G .
+	ceq GetAsListOfFlush(P, G) = ( ToNat(CardNum(GetCard(P, 2))) ToNat(CardNum(GetCard(P, 4))) ToNat(CardNum(GetCard(P, 5))) ) if CardSuit(GetCard(P, 2)) == G and CardSuit(GetCard(P, 4)) == G and CardSuit(GetCard(P, 5)) == G .
+	ceq GetAsListOfFlush(P, G) = ( ToNat(CardNum(GetCard(P, 3))) ToNat(CardNum(GetCard(P, 4))) ToNat(CardNum(GetCard(P, 5))) ) if CardSuit(GetCard(P, 3)) == G and CardSuit(GetCard(P, 4)) == G and CardSuit(GetCard(P, 5)) == G .
+
+	eq GetAsListOfFlush(P, G) = nil [owise] .
 
 endfm

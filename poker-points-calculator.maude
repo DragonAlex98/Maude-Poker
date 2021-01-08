@@ -1,57 +1,125 @@
 fmod POKER-POINTS-CALCULATOR is
 
-	including POKER-RESULTS .
-	including POKER-PLAYER .
+	*** including POKER-PLAYER .
+	including POKER-POINT .
+	including POKER-PLAYER-HAND .
 	including POKER-GAME-PLATE .
+	including POKER-LISTS-AND-SETS .
 	
-	vars P L : Player .
+	*** vars P L : Player .
 	vars X Y : PlayerHand .
 	vars Z : Plate .
+	var L : List{Nat<} .
 
-	*** Check pairs
-	ops Pairs DPairs Tris Flush Full Poker : PlayerHand Plate -> Result .
+	op GetAsList : PlayerHand Plate -> List{Nat<} .
+	eq GetAsList(X, Z) = sort( makeList( union(GetAsSet(X), GetAsSet(Z)) )  ).
+
+	ops CheckPairs CheckDPairs CheckTris CheckStraight CheckFlush CheckFull CheckPoker : PlayerHand Plate -> Point .
 	
-	ceq Pairs(X, Z) = Pairs if HasPairs(X) and NoPoints(Z) .
-	ceq Pairs(X, Z) = Pairs if HasCard(Z, GetCard(X, 1)) or HasCard(Z, GetCard(X, 2)) .
-	ceq Pairs(X, Z) = Pairs if NoPoints(X) and HasPairs(Z) .
-	eq Pairs(X, Z) = HCard [owise] .
+	*** Check pairs
+	ceq CheckPairs(X, Z) = Pairs(GetCard(X, 1)) if HasPairs(X) and NoPoints(Z) .
+	ceq CheckPairs(X, Z) = Pairs(GetCard(X, 1)) if HasCard(Z, GetCard(X, 1)) .
+	ceq CheckPairs(X, Z) = Pairs(GetCard(X, 2)) if HasCard(Z, GetCard(X, 2)) .
+	ceq CheckPairs(X, Z) = Pairs(GetPairs(Z)) if NoPoints(X) and HasPairs(Z) .
+	eq CheckPairs(X, Z) = HCard [owise] .
 	
 	*** Check Double Pairs
-	ceq DPairs(X, Z) = DPairs if HasPairs(X) and HasPairs(Z) .
-	ceq DPairs(X, Z) = DPairs if HasCard(Z, GetCard(X, 1)) and HasPairs(Z) and not HasPairsOf(Z, GetCard(X, 1)) .
-	ceq DPairs(X, Z) = DPairs if HasCard(Z, GetCard(X, 2)) and HasPairs(Z) and not HasPairsOf(Z, GetCard(X, 2)) .
-	ceq DPairs(X, Z) = DPairs if HasCard(Z, GetCard(X, 1)) and HasCard(Z, GetCard(X, 2)) .
-	ceq DPairs(X, Z) = DPairs if NoPoints(X) and HasDPairs(Z) .
-	eq DPairs(X, Z) = Pairs(X, Z) [owise] .
+	ceq CheckDPairs(X, Z) = DPairs(GetCard(X, 1), GetPairs(Z)) if HasPairs(X) and HasPairs(Z) .
+	ceq CheckDPairs(X, Z) = DPairs(GetCard(X, 1), GetPairs(Z)) if HasCard(Z, GetCard(X, 1)) and HasPairs(Z) and not HasPairsOf(Z, GetCard(X, 1)) .
+	ceq CheckDPairs(X, Z) = DPairs(GetCard(X, 2), GetPairs(Z)) if HasCard(Z, GetCard(X, 2)) and HasPairs(Z) and not HasPairsOf(Z, GetCard(X, 2)) .
+	ceq CheckDPairs(X, Z) = DPairs(GetCard(X, 1), GetCard(X, 2)) if HasCard(Z, GetCard(X, 1)) and HasCard(Z, GetCard(X, 2)) .
+	ceq CheckDPairs(X, Z) = GetDPairs(Z) if NoPoints(X) and HasDPairs(Z) .
+	eq CheckDPairs(X, Z) = CheckPairs(X, Z) [owise] .
 
 	*** Check Tris
-	ceq Tris(X, Z) = Tris if HasPairsOf(Z, GetCard(X, 1)) .
-	ceq Tris(X, Z) = Tris if HasPairsOf(Z, GetCard(X, 2)) .
-	ceq Tris(X, Z) = Tris if HasPairs(X) and HasCard(Z, GetCard(X, 1)) .
-	ceq Tris(X, Z) = Tris if NoPoints(X) and HasTris(Z) .
-	eq Tris(X, Z) = DPairs(X, Z) [owise] .
+	ceq CheckTris(X, Z) = Tris(GetCard(X, 1)) if HasPairsOf(Z, GetCard(X, 1)) .
+	ceq CheckTris(X, Z) = Tris(GetCard(X, 2)) if HasPairsOf(Z, GetCard(X, 2)) .
+	ceq CheckTris(X, Z) = Tris(GetCard(X, 1)) if HasPairs(X) and HasCard(Z, GetCard(X, 1)) .
+	ceq CheckTris(X, Z) = GetTris(Z) if NoPoints(X) and HasTris(Z) .
+	eq CheckTris(X, Z) = CheckDPairs(X, Z) [owise] .
+
+	*** Check Straight
+	ceq CheckStraight(X, Z) = Straight(GetStraight(GetAsList(X, Z))) if HasStraight(GetAsList(X, Z)) .
+	eq CheckStraight(X, Z) = CheckTris(X, Z) [owise] .
+
+	op HasStraight : List{Nat<} -> Bool .
+	op GetStraight : List{Nat<} -> Nat .
+
+	*** size 7 scala da 7
+	ceq HasStraight(L) = true if size(L) == 7 and s(head(L)) == head(tail(L)) and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) and s(head(tail(tail(tail(tail(L)))))) == head(tail(tail(tail(tail(tail(L)))))) and s(head(tail(tail(tail(tail(tail(L))))))) == last(L) .
+	*** size 7 scala primi 6
+	ceq HasStraight(L) = true if size(L) == 7 and s(head(L)) == head(tail(L)) and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) and s(head(tail(tail(tail(tail(L)))))) == head(tail(tail(tail(tail(tail(L)))))) .
+	*** size 7 scala ultimi 6
+	ceq HasStraight(L) = true if size(L) == 7 and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) and s(head(tail(tail(tail(tail(L)))))) == head(tail(tail(tail(tail(tail(L)))))) and s(head(tail(tail(tail(tail(tail(L))))))) == last(L) .
+	*** size 7 scala primi 5
+	ceq HasStraight(L) = true if size(L) == 7 and s(head(L)) == head(tail(L)) and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) .
+	*** size 7 scala ultimi 5
+	ceq HasStraight(L) = true if size(L) == 7 and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) and s(head(tail(tail(tail(tail(L)))))) == head(tail(tail(tail(tail(tail(L)))))) and s(head(tail(tail(tail(tail(tail(L))))))) == last(L) .
+	*** size 7 scala 5 in mezzo
+	ceq HasStraight(L) = true if size(L) == 7 and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) and s(head(tail(tail(tail(tail(L)))))) == head(tail(tail(tail(tail(tail(L)))))) .
+	***ceq HasStraight(L) = true if size(L) == 7 and last(L) == 14 and head(L) == 2 and head(tail(L)) == 3 and head(tail(tail(L))) == 4 and head(tail(tail(tail(L)))) == 5 .
+	*** size 6 scala 6
+	ceq HasStraight(L) = true if size(L) == 6 and s(head(L)) == head(tail(L)) and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) and s(head(tail(tail(tail(tail(L)))))) == head(tail(tail(tail(tail(tail(L)))))) .
+	*** size 6 scala primi 5 
+	ceq HasStraight(L) = true if size(L) == 6 and s(head(L)) == head(tail(L)) and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) .
+	*** size 6 scala ultimi 5
+	ceq HasStraight(L) = true if size(L) == 6 and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) and s(head(tail(tail(tail(tail(L)))))) == last(L) .
+	***ceq HasStraight(L) = true if size(L) == 6 and last(L) == 14 and head(L) == 2 and head(tail(L)) == 3 and head(tail(tail(L))) == 4 and head(tail(tail(tail(L)))) == 5 .
+	*** size 5 scala da 5
+	ceq HasStraight(L) = true if size(L) == 5 and s(head(L)) == head(tail(L)) and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == last(L) .
+	*** A2345
+	ceq HasStraight(L) = true if last(L) == 14 and head(L) == 2 and head(tail(L)) == 3 and head(tail(tail(L))) == 4 and head(tail(tail(tail(L)))) == 5 .
+	eq HasStraight(L) = false [owise] .
+
+	*** size 7 scala da 7
+	ceq GetStraight(L) = last(L) if size(L) == 7 and s(head(L)) == head(tail(L)) and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) and s(head(tail(tail(tail(tail(L)))))) == head(tail(tail(tail(tail(tail(L)))))) and s(head(tail(tail(tail(tail(tail(L))))))) == last(L) .
+	*** size 7 scala primi 6
+	ceq GetStraight(L) = head(tail(tail(tail(tail(tail(L)))))) if size(L) == 7 and s(head(L)) == head(tail(L)) and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) and s(head(tail(tail(tail(tail(L)))))) == head(tail(tail(tail(tail(tail(L)))))) .
+	*** size 7 scala ultimi 6
+	ceq GetStraight(L) = last(L) if size(L) == 7 and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) and s(head(tail(tail(tail(tail(L)))))) == head(tail(tail(tail(tail(tail(L)))))) and s(head(tail(tail(tail(tail(tail(L))))))) == last(L) .
+	*** size 7 scala primi 5
+	ceq GetStraight(L) = head(tail(tail(tail(tail(L))))) if size(L) == 7 and s(head(L)) == head(tail(L)) and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) .
+	*** size 7 scala ultimi 5
+	ceq GetStraight(L) = last(L) if size(L) == 7 and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) and s(head(tail(tail(tail(tail(L)))))) == head(tail(tail(tail(tail(tail(L)))))) and s(head(tail(tail(tail(tail(tail(L))))))) == last(L) .
+	*** size 7 scala 5 in mezzo
+	ceq GetStraight(L) = head(tail(tail(tail(tail(tail(L)))))) if size(L) == 7 and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) and s(head(tail(tail(tail(tail(L)))))) == head(tail(tail(tail(tail(tail(L)))))) .
+	ceq GetStraight(L) = head(tail(tail(tail(L)))) if size(L) == 7 and last(L) == 14 and s(head(L)) == head(tail(L)) and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) .	
+	*** size 6 scala 6
+	ceq GetStraight(L) = head(tail(tail(tail(tail(tail(L)))))) if size(L) == 6 and s(head(L)) == head(tail(L)) and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) and s(head(tail(tail(tail(tail(L)))))) == head(tail(tail(tail(tail(tail(L)))))) .
+	*** size 6 scala primi 5 
+	ceq GetStraight(L) = head(tail(tail(tail(tail(L))))) if size(L) == 6 and s(head(L)) == head(tail(L)) and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) .
+	*** size 6 scala ultimi 5
+	ceq GetStraight(L) = last(L) if size(L) == 6 and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == head(tail(tail(tail(tail(L))))) and s(head(tail(tail(tail(tail(L)))))) == last(L) .
+	ceq GetStraight(L) = head(tail(tail(tail(L)))) if size(L) == 6 and last(L) == 14 and s(head(L)) == head(tail(L)) and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) .
+	*** size 5 scala da 5
+	ceq GetStraight(L) = last(L) if size(L) == 5 and s(head(L)) == head(tail(L)) and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) and s(head(tail(tail(tail(L))))) == last(L) .
+	ceq GetStraight(L) = head(tail(tail(tail(L)))) if size(L) == 5 and last(L) == 14 and s(head(L)) == head(tail(L)) and s(head(tail(L))) == head(tail(tail(L))) and s(head(tail(tail(L)))) == head(tail(tail(tail(L)))) .
+	***eq GetStraight(L) = false [owise] .
 
 	*** Check Flush
-	ceq Flush(X, Z) = Flush if HasFlushPair(X) and HasFlushTrisOf(Z, GetCard(X, 1)) .
-	ceq Flush(X, Z) = Flush if HasFlushPokerOf(Z, GetCard(X, 1)) .
-	ceq Flush(X, Z) = Flush if HasFlushPokerOf(Z, GetCard(X, 2)) .
-	ceq Flush(X, Z) = Flush if HasFullFlush(Z) .
-	eq Flush(X, Z) = Tris(X, Z) [owise] .
+	ceq CheckFlush(X, Z) = Flush(GetFlushPair(X)) if HasFlushPair(X) and HasFlushTrisOf(Z, GetCard(X, 1)) .
+	ceq CheckFlush(X, Z) = Flush(GetFlushOfCard(X, 1)) if HasFlushPokerOf(Z, GetCard(X, 1)) .
+	ceq CheckFlush(X, Z) = Flush(GetFlushOfCard(X, 2)) if HasFlushPokerOf(Z, GetCard(X, 2)) .
+	ceq CheckFlush(X, Z) = Flush(GetFullFlush(Z)) if HasFullFlush(Z) .
+	eq CheckFlush(X, Z) = CheckStraight(X, Z) [owise] .
 
 	*** Check Full House
-	ceq Full(X, Z) = Full if DPairs(X, Z) == DPairs and Tris(X, Z) == Tris .
-	ceq Full(X, Z) = Full if HasPairs(X) and HasTris(Z) .
-	eq Full(X, Z) = Flush(X, Z) [owise] .
+	ceq CheckFull(X, Z) = Full(CheckTris(X, Z), Pairs(GetFirstCardOf(CheckDPairs(X, Z)))) if ToNat(CheckDPairs(X, Z)) == 3 and ToNat(CheckTris(X, Z)) == 4 and not GetFirstCardOf(CheckDPairs(X, Z)) equals GetCardOf(CheckTris(X, Z)) .
+	ceq CheckFull(X, Z) = Full(CheckTris(X, Z), Pairs(GetSecondCardOf(CheckDPairs(X, Z)))) if ToNat(CheckDPairs(X, Z)) == 3 and ToNat(CheckTris(X, Z)) == 4 and not GetSecondCardOf(CheckDPairs(X, Z)) equals GetCardOf(CheckTris(X, Z)) .
+	ceq CheckFull(X, Z) = Full(GetTris(Z), CheckPairs(X, Z)) if HasPairs(X) and HasTris(Z) .
+	ceq CheckFull(X, Z) = GetFull(Z) if HasFull(Z) .
+	eq CheckFull(X, Z) = CheckFlush(X, Z) [owise] .
 
 	*** Check Poker
-	ceq Poker(X, Z) = Poker if HasTrisOf(Z, GetCard(X, 1)) or HasTrisOf(Z, GetCard(X, 2)) .
-	ceq Poker(X, Z) = Poker if HasPairs(X) and HasPairsOf(Z, GetCard(X, 1)) .
-	ceq Poker(X, Z) = Poker if HasPoker(Z) .
-	eq Poker(X, Z) = Full(X, Z) [owise] .
+	ceq CheckPoker(X, Z) = Poker(GetCard(X, 1)) if HasTrisOf(Z, GetCard(X, 1)) .
+	ceq CheckPoker(X, Z) = Poker(GetCard(X, 2)) if HasTrisOf(Z, GetCard(X, 2)) .
+	ceq CheckPoker(X, Z) = Poker(GetCard(X, 1)) if HasPairs(X) and HasPairsOf(Z, GetCard(X, 1)) .
+	ceq CheckPoker(X, Z) = GetPoker(Z) if HasPoker(Z) .
+	eq CheckPoker(X, Z) = CheckFull(X, Z) [owise] .
 
 	*** Evaluator
-	op EvaluateHand : PlayerHand Plate -> Result .
+	op EvaluateHand : PlayerHand Plate -> Point .
 
-	eq EvaluateHand(X, Z) = Poker(X, Z) .
+	eq EvaluateHand(X, Z) = CheckPoker(X, Z) .
 
 endfm
