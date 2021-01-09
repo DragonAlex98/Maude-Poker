@@ -13,7 +13,6 @@ fmod POKER-CARD is
 	op _<_ : Card Card -> Bool .
 	op _=f=_ : Card Card -> Bool .
 	ops GetHigherCard GetLowerCard : Card Card -> Card .
-	ops GetHCard GetSecondHCard GetThirdHCard : Card Card Card -> Card .
 	
 	var N : Number .
 	var L : Suit .
@@ -40,21 +39,6 @@ fmod POKER-CARD is
 
 	ceq GetLowerCard(X, Y) = X if X < Y .
 	eq GetLowerCard(X, Y) = Y [owise] .
-
-	*** 2 6 8 4 1
-
-	*** Three cards 
-	ceq GetHCard(X, Y, Z) = X if X > Y and X > Z .
-	ceq GetHCard(X, Y, Z) = Y if Y > X and Y > Z .
-	eq GetHCard(X, Y, Z) = Z [owise] .
-
-	ceq GetSecondHCard(X, Y, Z) = X if X < GetHCard(X, Y, Z) and X > GetThirdHCard(X, Y, Z) .
-	ceq GetSecondHCard(X, Y, Z) = Y if Y < GetHCard(X, Y, Z) and Y > GetThirdHCard(X, Y, Z) .
-	eq GetSecondHCard(X, Y, Z) = Z [owise] .
-
-	ceq GetThirdHCard(X, Y, Z) = X if X < Y and X < Z .
-	ceq GetThirdHCard(X, Y, Z) = Y if Y < X and Y < Z .
-	eq GetThirdHCard(X, Y, Z) = Z [owise] .
 
 endfm
 
