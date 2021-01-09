@@ -5,7 +5,7 @@ load poker-deck
 load poker-player-hand
 load poker-player
 load poker-point
-load poker-game-plate
+load poker-game-board
 load poker-kicker
 load poker-final-hand
 load poker-points-calculator
@@ -20,7 +20,7 @@ mod POKER is
 	pr POKER-DECK .
 	pr POKER-PLAYER-HAND .
 	pr POKER-POINT .
-	pr POKER-GAME-PLATE .
+	pr POKER-GAME-BOARD .
 	pr POKER-KICKER .
 	pr POKER-FINAL-HAND .
 	pr POKER-POINTS-CALCULATOR .
@@ -30,15 +30,15 @@ mod POKER is
 	pr POKER-WINNER .
 
 	var P1 P2 : Player .
-    var Pl : Plate .
+    var Pl : Board .
     var L : Deck .
     var N : Nat .
     var W : Winner .
 	
 	sort State .
-	op ____ : Plate Player Player Deck -> State [ctor] .
-	op _____ : Plate Player Player Deck Nat -> State [ctor] .
-	op ______ : Plate Player Player Deck Winner Nat -> State [ctor] .
+	op ____ : Board Player Player Deck -> State [ctor] .
+	op _____ : Board Player Player Deck Nat -> State [ctor] .
+	op ______ : Board Player Player Deck Winner Nat -> State [ctor] .
 	
 	***op isSuccess : State -> Bool .
 	***ceq isSuccess(P1 L) = true if length(L) == 50 and GetPlayerHand(P1) =/= <> .
@@ -48,38 +48,38 @@ mod POKER is
 	rl drawRule(D:Deck) => remove(D:Deck, random(length(D:Deck)) rem length(D:Deck)) .
 	
 	op cardsToP1Rule : State Nat -> [State] .
-	rl cardsToP1Rule(Pl:Plate P1:Player P2:Player L:Deck, N:Nat) => Pl P1(< getReturnedCard(drawRule(L)) , getReturnedCard(drawRule(getReturnedDeck(drawRule(L)))) >) P2 getReturnedDeck(drawRule(getReturnedDeck(drawRule(L)))) N .
+	rl cardsToP1Rule(Pl:Board P1:Player P2:Player L:Deck, N:Nat) => Pl P1(< getReturnedCard(drawRule(L)) , getReturnedCard(drawRule(getReturnedDeck(drawRule(L)))) >) P2 getReturnedDeck(drawRule(getReturnedDeck(drawRule(L)))) N .
 
     crl [cardsToP1] : Pl P1 P2 L N => cardsToP1Rule(Pl P1 P2 L, N) if GetPlayerHand(P1) == <> .
     
     op cardsToP2Rule : State Nat -> [State] .
-    rl cardsToP2Rule(Pl:Plate P1:Player P2:Player L:Deck, N:Nat) => Pl P1 P2(< getReturnedCard(drawRule(L)) , getReturnedCard(drawRule(getReturnedDeck(drawRule(L)))) >) getReturnedDeck(drawRule(getReturnedDeck(drawRule(L)))) N .
+    rl cardsToP2Rule(Pl:Board P1:Player P2:Player L:Deck, N:Nat) => Pl P1 P2(< getReturnedCard(drawRule(L)) , getReturnedCard(drawRule(getReturnedDeck(drawRule(L)))) >) getReturnedDeck(drawRule(getReturnedDeck(drawRule(L)))) N .
     
     crl [cardsToP2] : Pl P1 P2 L N => cardsToP2Rule(Pl P1 P2 L, N) if GetPlayerHand(P2) == <> and GetPlayerHand(P1) =/= <> .
     
     op flopRule : State Nat -> [State] .
-    rl flopRule(Pl:Plate P1:Player P2:Player L:Deck, N:Nat) => getReturnedCard(drawRule(L)) getReturnedCard(drawRule(getReturnedDeck(drawRule(L)))) getReturnedCard(drawRule(getReturnedDeck(drawRule(getReturnedDeck(drawRule(L)))))) [] [] P1 P2 getReturnedDeck(drawRule(getReturnedDeck(drawRule(getReturnedDeck(drawRule(L)))))) N .
+    rl flopRule(Pl:Board P1:Player P2:Player L:Deck, N:Nat) => getReturnedCard(drawRule(L)) getReturnedCard(drawRule(getReturnedDeck(drawRule(L)))) getReturnedCard(drawRule(getReturnedDeck(drawRule(getReturnedDeck(drawRule(L)))))) [] [] P1 P2 getReturnedDeck(drawRule(getReturnedDeck(drawRule(getReturnedDeck(drawRule(L)))))) N .
 
     crl [flop] : Pl P1 P2 L N => flopRule(Pl P1 P2 L, N + 10) if GetPlayerHand(P1) =/= <> and GetPlayerHand(P2) =/= <> and GetCard(Pl, 1) == [] and GetCard(Pl, 2) == [] and GetCard(Pl, 3) == [] .
     crl [flop] : Pl P1 P2 L N => flopRule(Pl P1 P2 L, N + 20) if GetPlayerHand(P1) =/= <> and GetPlayerHand(P2) =/= <> and GetCard(Pl, 1) == [] and GetCard(Pl, 2) == [] and GetCard(Pl, 3) == [] .
     crl [flop] : Pl P1 P2 L N => flopRule(Pl P1 P2 L, N + 30) if GetPlayerHand(P1) =/= <> and GetPlayerHand(P2) =/= <> and GetCard(Pl, 1) == [] and GetCard(Pl, 2) == [] and GetCard(Pl, 3) == [] .
     
     op turnRule : State Nat -> [State] .
-    rl turnRule(Pl:Plate P1:Player P2:Player L:Deck, N:Nat) => GetCard(Pl, 1) GetCard(Pl, 2) GetCard(Pl, 3) getReturnedCard(drawRule(L)) [] P1 P2 getReturnedDeck(drawRule(L)) N .
+    rl turnRule(Pl:Board P1:Player P2:Player L:Deck, N:Nat) => GetCard(Pl, 1) GetCard(Pl, 2) GetCard(Pl, 3) getReturnedCard(drawRule(L)) [] P1 P2 getReturnedDeck(drawRule(L)) N .
     
     crl [turn] : Pl P1 P2 L N => turnRule(Pl P1 P2 L, N + 10) if GetPlayerHand(P1) =/= <> and GetPlayerHand(P2) =/= <> and GetCard(Pl, 1) =/= [] and GetCard(Pl, 2) =/= [] and GetCard(Pl, 3) =/= [] and GetCard(Pl, 4) == [] .
     crl [turn] : Pl P1 P2 L N => turnRule(Pl P1 P2 L, N + 20) if GetPlayerHand(P1) =/= <> and GetPlayerHand(P2) =/= <> and GetCard(Pl, 1) =/= [] and GetCard(Pl, 2) =/= [] and GetCard(Pl, 3) =/= [] and GetCard(Pl, 4) == [] .
     crl [turn] : Pl P1 P2 L N => turnRule(Pl P1 P2 L, N + 30) if GetPlayerHand(P1) =/= <> and GetPlayerHand(P2) =/= <> and GetCard(Pl, 1) =/= [] and GetCard(Pl, 2) =/= [] and GetCard(Pl, 3) =/= [] and GetCard(Pl, 4) == [] .
     
     op riverRule : State Nat -> [State] .
-    rl riverRule(Pl:Plate P1:Player P2:Player L:Deck, N:Nat) => GetCard(Pl, 1) GetCard(Pl, 2) GetCard(Pl, 3) GetCard(Pl, 4) getReturnedCard(drawRule(L)) P1 P2 getReturnedDeck(drawRule(L)) N .
+    rl riverRule(Pl:Board P1:Player P2:Player L:Deck, N:Nat) => GetCard(Pl, 1) GetCard(Pl, 2) GetCard(Pl, 3) GetCard(Pl, 4) getReturnedCard(drawRule(L)) P1 P2 getReturnedDeck(drawRule(L)) N .
     
     crl [river] : Pl P1 P2 L N => riverRule(Pl P1 P2 L, N + 10) if GetPlayerHand(P1) =/= <> and GetPlayerHand(P2) =/= <> and GetCard(Pl, 1) =/= [] and GetCard(Pl, 2) =/= [] and GetCard(Pl, 3) =/= [] and GetCard(Pl, 4) =/= [] and GetCard(Pl, 5) == [] .
     crl [river] : Pl P1 P2 L N => riverRule(Pl P1 P2 L, N + 20) if GetPlayerHand(P1) =/= <> and GetPlayerHand(P2) =/= <> and GetCard(Pl, 1) =/= [] and GetCard(Pl, 2) =/= [] and GetCard(Pl, 3) =/= [] and GetCard(Pl, 4) =/= [] and GetCard(Pl, 5) == [] .
     crl [river] : Pl P1 P2 L N => riverRule(Pl P1 P2 L, N + 30) if GetPlayerHand(P1) =/= <> and GetPlayerHand(P2) =/= <> and GetCard(Pl, 1) =/= [] and GetCard(Pl, 2) =/= [] and GetCard(Pl, 3) =/= [] and GetCard(Pl, 4) =/= [] and GetCard(Pl, 5) == [] .
 
 	op winnerRule : State Nat -> [State] .
-	rl winnerRule(Pl:Plate P1:Player P2:Player L:Deck, N:Nat) => Pl P1 P2 L Winner(P1 vs P2 plate Pl) N .
+	rl winnerRule(Pl:Board P1:Player P2:Player L:Deck, N:Nat) => Pl P1 P2 L Winner(P1 vs P2 Board Pl) N .
 	
     crl [winner] : Pl P1 P2 L N => winnerRule(Pl P1 P2 L, N) if GetPlayerHand(P1) =/= <> and GetPlayerHand(P2) =/= <> and GetCard(Pl, 1) =/= [] and GetCard(Pl, 2) =/= [] and GetCard(Pl, 3) =/= [] and GetCard(Pl, 4) =/= [] and GetCard(Pl, 5) =/= [] .
 

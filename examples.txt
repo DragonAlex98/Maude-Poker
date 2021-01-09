@@ -63,9 +63,9 @@ red HasFlushPair(<[A S],[2 S]>) . *** true
 red HasFlushPair(<[A S],[2 C]>) . *** false
 
 
-*** Plate examples ***
+*** Board examples ***
 
-red [A C] [3 H] [A S] [4 D] [J C] . *** plate
+red [A C] [3 H] [A S] [4 D] [J C] . *** Board
 
 red GetCard([A C] [3 H] [A S] [4 D] [J C], 1) . *** [A C]
 red GetCard([A C] [3 H] [A S] [4 D] [J C], 2) . *** [3 H]
@@ -125,10 +125,10 @@ red GetPlayerHand(P1(<[A C],[4 H]>)) . *** <[A C],[4 H]>
 red GetPlayerHand(P1(<[A C],[4 D]>)) . *** <[A C],[4 D]>
 
 *** Game config examples ***
-red P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) plate [J C] [5 S] [A S] [8 H] [9 D] . *** Game
-red GetP1(P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) plate [J C] [5 S] [A S] [8 H] [9 D]) . *** P1(<[A C],[4 H]>)
-red GetP2(P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) plate [J C] [5 S] [A S] [8 H] [9 D]) . *** P2(<[A H],[10 S]>)
-red GetPlate(P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) plate [J C] [5 S] [A S] [8 H] [9 D]) . *** [J C] [5 S] [A S] [8 H] [9 D]
+red P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) Board [J C] [5 S] [A S] [8 H] [9 D] . *** Game
+red GetP1(P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) Board [J C] [5 S] [A S] [8 H] [9 D]) . *** P1(<[A C],[4 H]>)
+red GetP2(P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) Board [J C] [5 S] [A S] [8 H] [9 D]) . *** P2(<[A H],[10 S]>)
+red Board(P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) Board [J C] [5 S] [A S] [8 H] [9 D]) . *** [J C] [5 S] [A S] [8 H] [9 D]
 
 *** Points Calculator examples ***
 
@@ -190,7 +190,7 @@ red CheckFlush(<[2 H],[3 C]>, [A D] [A D] [A D] [A D] [4 D]) . *** Flush
 red CheckFlush(<[2 H],[3 H]>, [A D] [A H] [A H] [A H] [4 H]) . *** Flush
 
 *** Poker - Check if a PlayerHand scored a Poker **
-*** Poker on plate
+*** Poker on Board
 red CheckPoker(<[2 H],[3 H]>, [A H] [A H] [A H] [A H] [4 H]) . *** Poker
 red CheckPoker(<[2 H],[3 H]>, [A H] [A H] [A H] [A H] [2 H]) . *** Poker
 red CheckPoker(<[2 H],[2 H]>, [A H] [A H] [A H] [A H] [2 H]) . *** Poker
@@ -224,11 +224,11 @@ red CheckStraight(<[5 H],[A S]>, [6 S] [4 D] [3 H] [2 C] [A D]) .
 
 
 *** PokerGame examples ***
-red P1(<[10 H],[J S]>) vs P2(<[A S],[Q H]>) plate [10 S] [Q D] [3 H] [A C] [10 D] .
+red P1(<[10 H],[J S]>) vs P2(<[A S],[Q H]>) Board [10 S] [Q D] [3 H] [A C] [10 D] .
 
-red Winner(P1(<[10 H],[J S]>) vs P2(<[A S],[Q H]>) plate [10 S] [Q D] [3 H] [A C] [10 D]) .
+red Winner(P1(<[10 H],[J S]>) vs P2(<[A S],[Q H]>) Board [10 S] [Q D] [3 H] [A C] [10 D]) .
 
-red Winner(P1(<[10 H],[J S]>) vs P2(<[A S],[Q H]>) plate [Q S] [Q D] [3 H] [A C] [10 D]) .
+red Winner(P1(<[10 H],[J S]>) vs P2(<[A S],[Q H]>) Board [Q S] [Q D] [3 H] [A C] [10 D]) .
 
 
 -----------------------------------------------------------------------------------------------------
@@ -239,6 +239,6 @@ red C .  *** suit
 red [J H] .  *** card
 red <[A C],[6 D]> . *** Player hand
 red P1(<[A C],[6 D]>) . *** Player
-red [A C] [3 H] [A S] [4 D] [J C] . *** plate
-red P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) plate [J C] [5 S] [A S] [8 H] [9 D] . *** Game
-red Winner(P1(<[10 H],[J S]>) vs P2(<[A S],[Q H]>) plate [10 S] [Q D] [3 H] [A C] [10 D]) .
+red [A C] [3 H] [A S] [4 D] [J C] . *** Board
+red P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) Board [J C] [5 S] [A S] [8 H] [9 D] . *** Game
+red Winner(P1(<[10 H],[J S]>) vs P2(<[A S],[Q H]>) Board [10 S] [Q D] [3 H] [A C] [10 D]) .

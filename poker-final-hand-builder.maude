@@ -1,14 +1,14 @@
 fmod POKER-FINAL-HAND-BUILDER is
 	including POKER-PLAYER-HAND .
-	including POKER-GAME-PLATE .
+	including POKER-GAME-BOARD .
 	including POKER-FINAL-HAND .
 	including POKER-POINTS-CALCULATOR .
 	including POKER-KICKER-CALCULATOR .
 
 	vars X Y : PlayerHand .
-	vars Z V : Plate .
+	vars Z V : Board .
 
-	op GetFHand : PlayerHand Plate -> FinalHand .
+	op GetFHand : PlayerHand Board -> FinalHand .
 
 	eq GetFHand(X, Z) = EvaluateHand(X, Z) # GetKicker(X, Z, EvaluateHand(X, Z)) .
 

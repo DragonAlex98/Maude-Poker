@@ -1,13 +1,13 @@
 fmod POKER-KICKER-CALCULATOR is
 
 	including POKER-POINT .
-	including POKER-GAME-PLATE .
+	including POKER-GAME-BOARD .
 	including POKER-PLAYER-HAND .
 	including POKER-KICKER .
 	including POKER-LISTS-AND-SETS .
 
 	var PH : PlayerHand .
-	var PL : Plate .
+	var PL : Board .
 	var P : Point .
 	var G : Suit .
 	var S : Set{Nat} .
@@ -15,13 +15,13 @@ fmod POKER-KICKER-CALCULATOR is
 
 	vars X Y Z U V W J : Card .
 
-	*** Get the union of the player hand and the plate (without repetitions of elements)
-	op GetAsSet : PlayerHand Plate -> Set{Nat} .
+	*** Get the union of the player hand and the Board (without repetitions of elements)
+	op GetAsSet : PlayerHand Board -> Set{Nat} .
 
 	eq GetAsSet(PH, PL) = union(GetAsSet(PH), GetAsSet(PL)) .
 
-	*** Get the union of the player hand and the plate (without repetitions of elements)
-	op GetAsFlushList : PlayerHand Plate Suit -> List{Nat<} .
+	*** Get the union of the player hand and the Board (without repetitions of elements)
+	op GetAsFlushList : PlayerHand Board Suit -> List{Nat<} .
 
 	eq GetAsFlushList(PH, PL, G) = append(GetAsListOfFlush(PH, G), GetAsListOfFlush(PL, G)) .
 
@@ -44,7 +44,7 @@ fmod POKER-KICKER-CALCULATOR is
 	eq GetSetAsList(S) = makeList(S) .
 
 	*** Get the kicker
-	op GetKicker : PlayerHand Plate Point -> Kicker .
+	op GetKicker : PlayerHand Board Point -> Kicker .
 
 	eq GetKicker(PH, PL, Flush(G)) = GetKicker( GetAsFlushList(PH, PL, G) ) .
 	eq GetKicker(PH, PL, Straight(N)) = nil .

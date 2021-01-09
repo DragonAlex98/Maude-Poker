@@ -3,18 +3,18 @@ fmod POKER-POINTS-CALCULATOR is
 	*** including POKER-PLAYER .
 	including POKER-POINT .
 	including POKER-PLAYER-HAND .
-	including POKER-GAME-PLATE .
+	including POKER-GAME-BOARD .
 	including POKER-LISTS-AND-SETS .
 	
 	*** vars P L : Player .
 	vars X Y : PlayerHand .
-	vars Z : Plate .
+	vars Z : Board .
 	var L : List{Nat<} .
 
-	op GetAsList : PlayerHand Plate -> List{Nat<} .
+	op GetAsList : PlayerHand Board -> List{Nat<} .
 	eq GetAsList(X, Z) = sort( makeList( union(GetAsSet(X), GetAsSet(Z)) )  ).
 
-	ops CheckPairs CheckDPairs CheckTris CheckStraight CheckFlush CheckFull CheckPoker : PlayerHand Plate -> Point .
+	ops CheckPairs CheckDPairs CheckTris CheckStraight CheckFlush CheckFull CheckPoker : PlayerHand Board -> Point .
 	
 	*** Check pairs
 	ceq CheckPairs(X, Z) = Pairs(GetCard(X, 1)) if HasPairs(X) and NoPoints(Z) .
@@ -118,7 +118,7 @@ fmod POKER-POINTS-CALCULATOR is
 	eq CheckPoker(X, Z) = CheckFull(X, Z) [owise] .
 
 	*** Evaluator
-	op EvaluateHand : PlayerHand Plate -> Point .
+	op EvaluateHand : PlayerHand Board -> Point .
 
 	eq EvaluateHand(X, Z) = CheckPoker(X, Z) .
 

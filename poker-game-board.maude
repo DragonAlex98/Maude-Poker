@@ -1,21 +1,20 @@
-fmod POKER-GAME-PLATE is
+fmod POKER-GAME-BOARD is
 	
 	including POKER-CARD .
 	including POKER-POINT .
 	including POKER-LISTS-AND-SETS .
-	*** protecting LIST{Card} .
-	sort Plate .
+	sort Board .
 	
-	*** Creates the plate
-	op _ _ _ _ _ : Card Card Card Card Card -> Plate [ctor] .
+	*** Creates the Board
+	op _ _ _ _ _ : Card Card Card Card Card -> Board [ctor] .
 	
 	vars X Y Z V W T : Card .
 	var G : Suit .
 	var L : Nat .
-	var P : Plate .
+	var P : Board .
 	
 	*** Returns the card in the position specified.
-	op GetCard : Plate Nat -> Card .
+	op GetCard : Board Nat -> Card .
 	
 	ceq GetCard(X Y Z V W, L) = X if L == 1 .
 	ceq GetCard(X Y Z V W, L) = Y if L == 2 .
@@ -23,19 +22,19 @@ fmod POKER-GAME-PLATE is
 	ceq GetCard(X Y Z V W, L) = V if L == 4 .
 	eq GetCard(X Y Z V W, L) = W [owise] .
 	
-	*** Returns if the plate has no points
-	op NoPoints : Plate -> Bool .
+	*** Returns if the Board has no points
+	op NoPoints : Board -> Bool .
 	
 	eq NoPoints(P) = true .
 	
-	*** Return true if the plate has the card within him
-	op HasCard : Plate Card -> Bool .
+	*** Return true if the Board has the card within him
+	op HasCard : Board Card -> Bool .
 	
 	ceq HasCard(X Y Z V W, T) = true if T equals X or T equals Y or T equals Z or T equals V or T equals W .
 	eq HasCard(X Y Z V W, T) = false [owise] .
 	
-	*** Returns true if the plate has pairs
-	op HasPairs : Plate -> Bool .
+	*** Returns true if the Board has pairs
+	op HasPairs : Board -> Bool .
 
 	*** Nuovi HasPairs
 	ceq HasPairs(X Y Z V W) = true if HasCard([] Y Z V W, X) .
@@ -45,7 +44,7 @@ fmod POKER-GAME-PLATE is
 	ceq HasPairs(X Y Z V W) = true if HasCard(X Y Z V [], W) .
 	eq HasPairs(X Y Z V W) = false [owise] .
 
-	op GetPairs : Plate -> Card .
+	op GetPairs : Board -> Card .
 
 	ceq GetPairs(X Y Z V W) = X if HasCard([] Y Z V W, X) .
 	ceq GetPairs(X Y Z V W) = Y if HasCard(X [] Z V W, Y) .
@@ -66,8 +65,8 @@ fmod POKER-GAME-PLATE is
 	*** ceq HasPairs(X Y Z V W) = true if Z equals W .
 	*** ceq HasPairs(X Y Z V W) = true if V equals W .
 	
-	*** Returns true if the plate has pairs of something
-	op HasPairsOf : Plate Card -> Bool .
+	*** Returns true if the Board has pairs of something
+	op HasPairsOf : Board Card -> Bool .
 	
 	ceq HasPairsOf(X Y Z V W, T) = HasCard([] Y Z V W, T) if T equals X .
 	ceq HasPairsOf(X Y Z V W, T) = HasCard(X [] Z V W, T) if T equals Y .
@@ -76,8 +75,8 @@ fmod POKER-GAME-PLATE is
 	ceq HasPairsOf(X Y Z V W, T) = HasCard(X Y Z V [], T) if T equals W .
 	eq HasPairsOf(X Y Z V W, T) = false [owise] .
 
-	*** Returns true if the plate has double pairs .
-	op HasDPairs : Plate -> Bool .
+	*** Returns true if the Board has double pairs .
+	op HasDPairs : Board -> Bool .
 
 	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, X) and HasPairsOf(X Y Z V W, Y) and not X equals Y .
 	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, X) and HasPairsOf(X Y Z V W, Z) and not X equals Z .
@@ -91,7 +90,7 @@ fmod POKER-GAME-PLATE is
 	ceq HasDPairs(X Y Z V W) = true if HasPairsOf(X Y Z V W, V) and HasPairsOf(X Y Z V W, W) and not V equals W .
 	eq HasDPairs(X Y Z V W) = false [owise] .
 	
-	op GetDPairs : Plate -> Point .
+	op GetDPairs : Board -> Point .
 
 	ceq GetDPairs(X Y Z V W) = DPairs(X, Y) if HasPairsOf(X Y Z V W, X) and HasPairsOf(X Y Z V W, Y) and not X equals Y .
 	ceq GetDPairs(X Y Z V W) = DPairs(X, Z) if HasPairsOf(X Y Z V W, X) and HasPairsOf(X Y Z V W, Z) and not X equals Z .
@@ -104,8 +103,8 @@ fmod POKER-GAME-PLATE is
 	ceq GetDPairs(X Y Z V W) = DPairs(Z, W) if HasPairsOf(X Y Z V W, Z) and HasPairsOf(X Y Z V W, W) and not Z equals W .
 	ceq GetDPairs(X Y Z V W) = DPairs(V, W) if HasPairsOf(X Y Z V W, V) and HasPairsOf(X Y Z V W, W) and not V equals W .
 
-	*** Returns true if the plate has a tris
-	op HasTris : Plate -> Bool .
+	*** Returns true if the Board has a tris
+	op HasTris : Board -> Bool .
 	
 	ceq HasTris(X Y Z V W) = true if HasPairsOf([] Y Z V W, X) .
 	ceq HasTris(X Y Z V W) = true if HasPairsOf(X [] Z V W, Y) .
@@ -114,8 +113,8 @@ fmod POKER-GAME-PLATE is
 	ceq HasTris(X Y Z V W) = true if HasPairsOf(X Y Z V [], W) .
 	eq HasTris(X Y Z V W) = false [owise] .
 
-	*** Returns true if the plate has tris of something
-	op HasTrisOf : Plate Card -> Bool .
+	*** Returns true if the Board has tris of something
+	op HasTrisOf : Board Card -> Bool .
 	
 	ceq HasTrisOf(X Y Z V W, T) = HasPairsOf([] Y Z V W, T) if T equals X .
 	ceq HasTrisOf(X Y Z V W, T) = HasPairsOf(X [] Z V W, T) if T equals Y .
@@ -124,7 +123,7 @@ fmod POKER-GAME-PLATE is
 	ceq HasTrisOf(X Y Z V W, T) = HasPairsOf(X Y Z V [], T) if T equals W .
 	eq HasTrisOf(X Y Z V W, T) = false [owise] .
 
-	op GetTris : Plate -> Point .
+	op GetTris : Board -> Point .
 
 	ceq GetTris(X Y Z V W) = Tris(X) if HasPairsOf([] Y Z V W, X) .
 	ceq GetTris(X Y Z V W) = Tris(Y) if HasPairsOf(X [] Z V W, Y) .
@@ -132,19 +131,19 @@ fmod POKER-GAME-PLATE is
 	ceq GetTris(X Y Z V W) = Tris(V) if HasPairsOf(X Y Z [] W, V) .
 	ceq GetTris(X Y Z V W) = Tris(W) if HasPairsOf(X Y Z V [], W) .
 
-	*** Return true if the plate has full
-	op HasFull : Plate -> Bool .
+	*** Return true if the Board has full
+	op HasFull : Board -> Bool .
 
 	ceq HasFull(X Y Z V W) = true if HasDPairs(X Y Z V W) and HasTris(X Y Z V W) .
 	eq HasFull(X Y Z V W) = false [owise] .
 
-	op GetFull : Plate -> Point .
+	op GetFull : Board -> Point .
 
 	ceq GetFull(X Y Z V W) = Full(GetTris(X Y Z V W), Pairs(GetFirstCardOf(GetDPairs(X Y Z V W)))) if HasFull(X Y Z V W) and not GetFirstCardOf(GetDPairs(X Y Z V W)) equals GetCardOf(GetTris(X Y Z V W)) .
 	ceq GetFull(X Y Z V W) = Full(GetTris(X Y Z V W), Pairs(GetSecondCardOf(GetDPairs(X Y Z V W)))) if HasFull(X Y Z V W) and not GetSecondCardOf(GetDPairs(X Y Z V W)) equals GetCardOf(GetTris(X Y Z V W)) .
 	
-	*** Returns true if the plate has poker
-	op HasPoker : Plate -> Bool .
+	*** Returns true if the Board has poker
+	op HasPoker : Board -> Bool .
 
 	ceq HasPoker(X Y Z V W) = true if HasTrisOf([] Y Z V W, X) .
 	ceq HasPoker(X Y Z V W) = true if HasTrisOf(X [] Z V W, Y) .
@@ -153,7 +152,7 @@ fmod POKER-GAME-PLATE is
 	ceq HasPoker(X Y Z V W) = true if HasTrisOf(X Y Z V [], W) .
 	eq HasPoker(X Y Z V W) = false [owise] .
 
-	op GetPoker : Plate -> Point .
+	op GetPoker : Board -> Point .
 
 	ceq GetPoker(X Y Z V W) = Poker(X) if HasTrisOf([] Y Z V W, X) .
 	ceq GetPoker(X Y Z V W) = Poker(Y) if HasTrisOf(X [] Z V W, Y) .
@@ -163,14 +162,14 @@ fmod POKER-GAME-PLATE is
 
 	*** Flush Part
 
-	*** Return true if the plate has that flush within him
-	op HasFlush : Plate Card -> Bool .
+	*** Return true if the Board has that flush within him
+	op HasFlush : Board Card -> Bool .
 	
 	ceq HasFlush(X Y Z V W, T) = true if T =f= X or T =f= Y or T =f= Z or T =f= V or T =f= W .
 	eq HasFlush(X Y Z V W, T) = false [owise] .
 
-	*** Returns true if the plate has pairs of something
-	op HasFlushPairsOf : Plate Card -> Bool .
+	*** Returns true if the Board has pairs of something
+	op HasFlushPairsOf : Board Card -> Bool .
 	
 	ceq HasFlushPairsOf(X Y Z V W, T) = HasFlush([] Y Z V W, T) if T =f= X .
 	ceq HasFlushPairsOf(X Y Z V W, T) = HasFlush(X [] Z V W, T) if T =f= Y .
@@ -179,8 +178,8 @@ fmod POKER-GAME-PLATE is
 	ceq HasFlushPairsOf(X Y Z V W, T) = HasFlush(X Y Z V [], T) if T =f= W .
 	eq HasFlushPairsOf(X Y Z V W, T) = false [owise] .
 
-	*** Returns true if the plate has tris of something
-	op HasFlushTrisOf : Plate Card -> Bool .
+	*** Returns true if the Board has tris of something
+	op HasFlushTrisOf : Board Card -> Bool .
 	
 	ceq HasFlushTrisOf(X Y Z V W, T) = HasFlushPairsOf([] Y Z V W, T) if T =f= X .
 	ceq HasFlushTrisOf(X Y Z V W, T) = HasFlushPairsOf(X [] Z V W, T) if T =f= Y .
@@ -189,8 +188,8 @@ fmod POKER-GAME-PLATE is
 	ceq HasFlushTrisOf(X Y Z V W, T) = HasFlushPairsOf(X Y Z V [], T) if T =f= W .
 	eq HasFlushTrisOf(X Y Z V W, T) = false [owise] .
 
-	*** Returns true if the plate has poker of some flush
-	op HasFlushPokerOf : Plate Card -> Bool .
+	*** Returns true if the Board has poker of some flush
+	op HasFlushPokerOf : Board Card -> Bool .
 	
 	ceq HasFlushPokerOf(X Y Z V W, T) = HasFlushTrisOf([] Y Z V W, T) if T =f= X .
 	ceq HasFlushPokerOf(X Y Z V W, T) = HasFlushTrisOf(X [] Z V W, T) if T =f= Y .
@@ -199,8 +198,8 @@ fmod POKER-GAME-PLATE is
 	ceq HasFlushPokerOf(X Y Z V W, T) = HasFlushTrisOf(X Y Z V [], T) if T =f= W .
 	eq HasFlushPokerOf(X Y Z V W, T) = false [owise] .
 
-	*** Returns true if the plate has poker
-	op HasFullFlush : Plate -> Bool .
+	*** Returns true if the Board has poker
+	op HasFullFlush : Board -> Bool .
 
 	ceq HasFullFlush(X Y Z V W) = true if HasFlushPokerOf([] Y Z V W, X) .
 	ceq HasFullFlush(X Y Z V W) = true if HasFlushPokerOf(X [] Z V W, Y) .
@@ -209,8 +208,8 @@ fmod POKER-GAME-PLATE is
 	ceq HasFullFlush(X Y Z V W) = true if HasFlushPokerOf(X Y Z V [], W) .
 	eq HasFullFlush(X Y Z V W) = false [owise] .
 
-	*** Returns true if the plate has poker
-	op GetFullFlush : Plate -> Suit .
+	*** Returns true if the Board has poker
+	op GetFullFlush : Board -> Suit .
 
 	ceq GetFullFlush(X Y Z V W) = CardSuit(X) if HasFlushPokerOf([] Y Z V W, X) .
 	ceq GetFullFlush(X Y Z V W) = CardSuit(Y) if HasFlushPokerOf(X [] Z V W, Y) .
@@ -218,26 +217,26 @@ fmod POKER-GAME-PLATE is
 	ceq GetFullFlush(X Y Z V W) = CardSuit(V) if HasFlushPokerOf(X Y Z [] W, V) .
 	ceq GetFullFlush(X Y Z V W) = CardSuit(W) if HasFlushPokerOf(X Y Z V [], W) .
 
-	*** op GetAsList : Plate -> NeList{Card} .
+	*** op GetAsList : Board -> NeList{Card} .
 
 	*** eq GetAsList(X Y Z V W) = X : Y : Z : V : W .
 
-	*** Get the greatest card of the plate
-	*** op GetGreatestCard : Plate -> Card .
+	*** Get the greatest card of the Board
+	*** op GetGreatestCard : Board -> Card .
 	***eq GetGreatestCard(X Y Z V W) = head(reverse(sort(GetAsList(X Y Z V W)))) .
 
 
-	*** Get a Plate as a Set of Nat
-	op GetAsSet : Plate -> Set{Nat} .
+	*** Get a Board as a Set of Nat
+	op GetAsSet : Board -> Set{Nat} .
 
 	eq GetAsSet(X Y Z V W) = ( ToNat(CardNum(X)), ToNat(CardNum(Y)), ToNat(CardNum(Z)), ToNat(CardNum(V)), ToNat(CardNum(W)) ) .
 
-	*** Get a Plate as a List of Card
-	op GetAsList : Plate -> List{Nat<} .
+	*** Get a Board as a List of Card
+	op GetAsList : Board -> List{Nat<} .
 
 	eq GetAsList(P) = ( ToNat(CardNum(GetCard(P, 1))) ToNat(CardNum(GetCard(P, 2))) ToNat(CardNum(GetCard(P, 3))) ToNat(CardNum(GetCard(P, 4))) ToNat(CardNum(GetCard(P, 5))) ) .
 
-	op GetAsListOfFlush : Plate Suit -> List{Nat<} .
+	op GetAsListOfFlush : Board Suit -> List{Nat<} .
 
 	*** Tutte e 5 di quel colore
 	ceq GetAsListOfFlush(P, G) = GetAsList(P) if CardSuit(GetCard(P, 1)) == G and CardSuit(GetCard(P, 2)) == G and CardSuit(GetCard(P, 3)) == G and CardSuit(GetCard(P, 4)) == G and CardSuit(GetCard(P, 5)) == G .
