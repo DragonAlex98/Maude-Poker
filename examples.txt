@@ -224,12 +224,63 @@ red CheckStraight(<[5 H],[A S]>, [6 S] [4 D] [3 H] [2 C] [A D]) .
 
 
 *** PokerGame examples ***
-red P1(<[10 H],[J S]>) vs P2(<[A S],[Q H]>) Board [10 S] [Q D] [3 H] [A C] [10 D] .
+red P1(<[10 H],[J S]>) vs P2(<[A S],[Q H]>) board [10 S] [Q D] [3 H] [A C] [10 D] .
 
-red Winner(P1(<[10 H],[J S]>) vs P2(<[A S],[Q H]>) Board [10 S] [Q D] [3 H] [A C] [10 D]) .
+red Winner(P1(<[Q H],[J S]>) vs P2(<[K S],[A H]>) board [5 S] [6 D] [7 H] [8 C] [10 D]) . *** p2 HC
+red Winner(P1(<[Q H],[J S]>) vs P2(<[2 S],[3 H]>) board [5 S] [6 D] [7 H] [8 C] [10 D]) . *** p1 HC
+red Winner(P1(<[Q H],[3 S]>) vs P2(<[2 S],[Q H]>) board [5 S] [6 D] [7 H] [8 C] [10 D]) . *** draw HC
 
-red Winner(P1(<[10 H],[J S]>) vs P2(<[A S],[Q H]>) Board [Q S] [Q D] [3 H] [A C] [10 D]) .
+red Winner(P1(<[Q H],[J S]>) vs P2(<[A S],[A H]>) board [5 S] [6 D] [7 H] [8 C] [10 D]) . *** p2 P
+red Winner(P1(<[Q H],[Q S]>) vs P2(<[2 S],[3 H]>) board [5 S] [6 D] [7 H] [8 C] [10 D]) . *** p1 P
+red Winner(P1(<[Q H],[J S]>) vs P2(<[2 S],[A H]>) board [5 S] [2 D] [7 H] [8 C] [10 D]) . *** p2 P
+red Winner(P1(<[Q H],[3 S]>) vs P2(<[2 S],[10 H]>) board [5 S] [6 D] [7 H] [8 C] [3 D]) . *** p1 P
+red Winner(P1(<[J H],[A S]>) vs P2(<[J S],[A H]>) board [J S] [6 D] [7 H] [8 C] [10 D]) . *** draw
+red Winner(P1(<[J H],[A S]>) vs P2(<[K S],[A H]>) board [5 S] [6 D] [7 H] [8 C] [A D]) . *** p2 P
 
+red Winner(P1(<[Q H],[J S]>) vs P2(<[A S],[A H]>) board [5 S] [6 D] [7 H] [8 C] [5 D]) . *** p2 DP
+red Winner(P1(<[Q H],[Q S]>) vs P2(<[2 S],[A H]>) board [2 S] [6 D] [A H] [8 C] [10 D]) . *** p2 DP
+red Winner(P1(<[J H],[J S]>) vs P2(<[2 S],[A H]>) board [5 S] [2 D] [7 H] [8 C] [5 D]) . *** p1 DP
+red Winner(P1(<[Q H],[3 S]>) vs P2(<[A S],[A H]>) board [Q S] [6 D] [7 H] [8 C] [3 D]) . *** p1 DP
+red Winner(P1(<[Q H],[3 S]>) vs P2(<[2 S],[Q H]>) board [Q S] [2 D] [7 H] [8 C] [3 D]) . *** p1 DP
+red Winner(P1(<[Q H],[3 S]>) vs P2(<[10 S],[Q H]>) board [Q S] [2 D] [7 H] [8 C] [8 D]) . *** p2 DP
+red Winner(P1(<[Q H],[3 S]>) vs P2(<[4 S],[Q H]>) board [Q S] [2 D] [7 H] [8 C] [8 D]) . *** draw
+red Winner(P1(<[Q H],[3 S]>) vs P2(<[4 S],[Q H]>) board [Q S] [3 D] [4 H] [J C] [8 D]) . *** p2 DP
+
+red Winner(P1(<[Q H],[J S]>) vs P2(<[A S],[A H]>) board [A S] [6 D] [7 H] [8 C] [5 D]) . *** p2 T
+red Winner(P1(<[Q H],[Q S]>) vs P2(<[2 S],[A H]>) board [A S] [6 D] [A H] [8 C] [10 D]) . *** p2 T
+red Winner(P1(<[J H],[J S]>) vs P2(<[A S],[A H]>) board [A S] [8 D] [9 H] [J C] [5 D]) . *** p2 T
+red Winner(P1(<[A H],[10 S]>) vs P2(<[J S],[A H]>) board [A S] [A D] [9 H] [Q C] [5 D]) . *** p2 T
+red Winner(P1(<[A H],[10 S]>) vs P2(<[J S],[K H]>) board [2 S] [2 D] [2 H] [Q C] [5 D]) . *** p1 T
+red Winner(P1(<[A H],[A S]>) vs P2(<[J S],[K H]>) board [A S] [2 D] [3 H] [Q C] [5 D]) . *** p1 T
+red Winner(P1(<[A H],[J S]>) vs P2(<[10 S],[A H]>) board [A S] [A D] [3 H] [Q C] [5 D]) . *** p1 T
+red Winner(P1(<[A H],[10 S]>) vs P2(<[10 S],[A H]>) board [A S] [A D] [3 H] [Q C] [5 D]) . *** draw
+
+red Winner(P1(<[Q H],[J S]>) vs P2(<[A S],[A H]>) board [A S] [6 D] [7 H] [7 C] [5 D]) . *** p2 FU
+red Winner(P1(<[Q H],[Q S]>) vs P2(<[2 S],[A H]>) board [A S] [6 D] [A H] [2 C] [Q D]) . *** p2 FU
+red Winner(P1(<[J H],[J S]>) vs P2(<[A S],[A H]>) board [A S] [8 D] [8 H] [J C] [5 D]) . *** p2 FU
+red Winner(P1(<[A H],[9 S]>) vs P2(<[10 S],[A H]>) board [A S] [A D] [9 H] [10 C] [5 D]) . *** p2 FU
+red Winner(P1(<[Q H],[J S]>) vs P2(<[A S],[2 H]>) board [A S] [Q D] [7 H] [7 C] [Q D]) . *** p1 FU
+red Winner(P1(<[Q H],[Q S]>) vs P2(<[2 S],[A H]>) board [A S] [6 D] [2 H] [2 C] [Q D]) . *** p1 FU
+red Winner(P1(<[J H],[J S]>) vs P2(<[J S],[J H]>) board [A S] [8 D] [8 H] [8 C] [5 D]) . *** draw
+
+red Winner(P1(<[3 H],[3 S]>) vs P2(<[A S],[A H]>) board [4 S] [2 D] [3 H] [A C] [5 D]) . *** draw
+red Winner(P1(<[3 H],[3 S]>) vs P2(<[A S],[6 H]>) board [4 S] [2 D] [3 H] [A C] [5 D]) . *** p2 S
+red Winner(P1(<[3 H],[3 S]>) vs P2(<[A S],[A H]>) board [4 S] [2 D] [3 H] [K C] [5 D]) . *** p2 S
+red Winner(P1(<[3 H],[3 S]>) vs P2(<[A S],[5 H]>) board [4 S] [2 D] [3 H] [9 C] [10 D]) . *** p2 S
+red Winner(P1(<[6 H],[7 S]>) vs P2(<[A S],[6 H]>) board [4 S] [2 D] [3 H] [A C] [5 D]) . *** p1 S
+red Winner(P1(<[6 H],[7 S]>) vs P2(<[8 S],[6 H]>) board [8 S] [7 D] [9 H] [A C] [5 D]) . *** draw
+
+red Winner(P1(<[6 H],[7 H]>) vs P2(<[8 S],[6 S]>) board [8 S] [7 H] [9 H] [A H] [5 D]) . *** p1 FL
+red Winner(P1(<[6 H],[7 D]>) vs P2(<[8 S],[6 S]>) board [8 H] [7 H] [9 H] [A H] [5 D]) . *** p1 FL
+red Winner(P1(<[6 H],[7 D]>) vs P2(<[8 S],[J H]>) board [8 H] [7 H] [9 H] [A H] [5 D]) . *** p2 FL
+red Winner(P1(<[K H],[7 D]>) vs P2(<[8 S],[J H]>) board [8 H] [7 H] [9 H] [A H] [5 D]) . *** p1 FL
+red Winner(P1(<[K H],[7 D]>) vs P2(<[10 S],[J H]>) board [8 H] [7 H] [9 H] [A H] [5 D]) . *** p1 FL
+red Winner(P1(<[6 H],[7 D]>) vs P2(<[8 S],[2 H]>) board [Q H] [K H] [9 H] [A H] [J H]) . *** draw
+red Winner(P1(<[10 H],[7 D]>) vs P2(<[8 S],[2 H]>) board [Q H] [K H] [9 H] [A H] [J H]) . *** P1 FL
+
+red Winner(P1(<[10 H],[7 D]>) vs P2(<[2 S],[2 H]>) board [2 H] [2 H] [10 H] [10 H] [J H]) . *** P2 PO
+red Winner(P1(<[10 H],[10 D]>) vs P2(<[2 S],[2 H]>) board [2 H] [2 H] [10 H] [10 H] [J H]) . *** P1 PO
+red Winner(P1(<[10 H],[3 H]>) vs P2(<[2 S],[2 H]>) board [2 H] [2 H] [10 H] [10 D] [J H]) .  *** P2 PO
 
 -----------------------------------------------------------------------------------------------------
 
@@ -240,5 +291,5 @@ red [J H] .  *** card
 red <[A C],[6 D]> . *** Player hand
 red P1(<[A C],[6 D]>) . *** Player
 red [A C] [3 H] [A S] [4 D] [J C] . *** Board
-red P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) Board [J C] [5 S] [A S] [8 H] [9 D] . *** Game
-red Winner(P1(<[10 H],[J S]>) vs P2(<[A S],[Q H]>) Board [10 S] [Q D] [3 H] [A C] [10 D]) .
+red P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) board [J C] [5 S] [A S] [8 H] [9 D] . *** Game
+red Winner(P1(<[10 H],[J S]>) vs P2(<[A S],[Q H]>) board [10 S] [Q D] [3 H] [A C] [10 D]) .

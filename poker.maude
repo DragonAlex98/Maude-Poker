@@ -79,7 +79,7 @@ mod POKER is
     crl [river] : Pl P1 P2 L N => riverRule(Pl P1 P2 L, N + 30) if GetPlayerHand(P1) =/= <> and GetPlayerHand(P2) =/= <> and GetCard(Pl, 1) =/= [] and GetCard(Pl, 2) =/= [] and GetCard(Pl, 3) =/= [] and GetCard(Pl, 4) =/= [] and GetCard(Pl, 5) == [] .
 
 	op winnerRule : State Nat -> [State] .
-	rl winnerRule(Pl:Board P1:Player P2:Player L:Deck, N:Nat) => Pl P1 P2 L Winner(P1 vs P2 Board Pl) N .
+	rl winnerRule(Pl:Board P1:Player P2:Player L:Deck, N:Nat) => Pl P1 P2 L Winner(P1 vs P2 board Pl) N .
 	
     crl [winner] : Pl P1 P2 L N => winnerRule(Pl P1 P2 L, N) if GetPlayerHand(P1) =/= <> and GetPlayerHand(P2) =/= <> and GetCard(Pl, 1) =/= [] and GetCard(Pl, 2) =/= [] and GetCard(Pl, 3) =/= [] and GetCard(Pl, 4) =/= [] and GetCard(Pl, 5) =/= [] .
 
