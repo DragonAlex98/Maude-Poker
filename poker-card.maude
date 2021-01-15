@@ -1,6 +1,6 @@
 fmod POKER-CARD is
 
-	including POKER-CARD-NUMBER .
+	pr POKER-CARD-NUMBER .
 	sorts Suit Card .
 	
 	ops C D H S : -> Suit [ctor] .
@@ -16,7 +16,7 @@ fmod POKER-CARD is
 	
 	var N : Number .
 	var L : Suit .
-	vars X Y Z V W : Card .
+	vars X Y : Card .
 	
 	eq CardNum([N L]) = N .
 	eq CardSuit([N L]) = L . 

@@ -1,8 +1,8 @@
 fmod POKER-GAME-BOARD is
 	
-	including POKER-CARD .
-	including POKER-POINT .
-	including POKER-LISTS-AND-SETS .
+	pr POKER-CARD .
+	pr POKER-POINT .
+	pr POKER-LISTS-AND-SETS .
 	sort Board .
 	
 	*** Creates the Board
@@ -21,11 +21,6 @@ fmod POKER-GAME-BOARD is
 	ceq GetCard(X Y Z V W, L) = Z if L == 3 .
 	ceq GetCard(X Y Z V W, L) = V if L == 4 .
 	eq GetCard(X Y Z V W, L) = W [owise] .
-	
-	*** Returns if the Board has no points
-	op NoPoints : Board -> Bool .
-	
-	eq NoPoints(P) = true .
 	
 	*** Return true if the Board has the card within him
 	op HasCard : Board Card -> Bool .
@@ -52,18 +47,6 @@ fmod POKER-GAME-BOARD is
 	ceq GetPairs(X Y Z V W) = V if HasCard(X Y Z [] W, V) .
 	ceq GetPairs(X Y Z V W) = W if HasCard(X Y Z V [], W) .
 	*** eq GetPairs(X Y Z V W) = nil [owise] .
-
-	*** Vecchi HasPairs
-	*** ceq HasPairs(X Y Z V W) = true if X equals Y .
-	*** ceq HasPairs(X Y Z V W) = true if X equals Z .
-	*** ceq HasPairs(X Y Z V W) = true if X equals V .
-	*** ceq HasPairs(X Y Z V W) = true if X equals W .
-	*** ceq HasPairs(X Y Z V W) = true if Y equals Z .
-	*** ceq HasPairs(X Y Z V W) = true if Y equals V .
-	*** ceq HasPairs(X Y Z V W) = true if Y equals W .
-	*** ceq HasPairs(X Y Z V W) = true if Z equals V .
-	*** ceq HasPairs(X Y Z V W) = true if Z equals W .
-	*** ceq HasPairs(X Y Z V W) = true if V equals W .
 	
 	*** Returns true if the Board has pairs of something
 	op HasPairsOf : Board Card -> Bool .
@@ -216,15 +199,6 @@ fmod POKER-GAME-BOARD is
 	ceq GetFullFlush(X Y Z V W) = CardSuit(Z) if HasFlushPokerOf(X Y [] V W, Z) .
 	ceq GetFullFlush(X Y Z V W) = CardSuit(V) if HasFlushPokerOf(X Y Z [] W, V) .
 	ceq GetFullFlush(X Y Z V W) = CardSuit(W) if HasFlushPokerOf(X Y Z V [], W) .
-
-	*** op GetAsList : Board -> NeList{Card} .
-
-	*** eq GetAsList(X Y Z V W) = X : Y : Z : V : W .
-
-	*** Get the greatest card of the Board
-	*** op GetGreatestCard : Board -> Card .
-	***eq GetGreatestCard(X Y Z V W) = head(reverse(sort(GetAsList(X Y Z V W)))) .
-
 
 	*** Get a Board as a Set of Nat
 	op GetAsSet : Board -> Set{Nat} .

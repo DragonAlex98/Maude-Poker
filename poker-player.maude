@@ -1,6 +1,6 @@
 fmod POKER-PLAYER is
 
-	including POKER-PLAYER-HAND .
+	pr POKER-PLAYER-HAND .
 	sort Player .
 	
 	var F : Player .

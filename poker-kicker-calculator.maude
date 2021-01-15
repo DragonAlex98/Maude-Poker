@@ -1,10 +1,10 @@
 fmod POKER-KICKER-CALCULATOR is
 
-	including POKER-POINT .
-	including POKER-GAME-BOARD .
-	including POKER-PLAYER-HAND .
-	including POKER-KICKER .
-	including POKER-LISTS-AND-SETS .
+	pr POKER-POINT .
+	pr POKER-GAME-BOARD .
+	pr POKER-PLAYER-HAND .
+	pr POKER-KICKER .
+	pr POKER-LISTS-AND-SETS .
 
 	var PH : PlayerHand .
 	var PL : Board .
@@ -12,8 +12,7 @@ fmod POKER-KICKER-CALCULATOR is
 	var G : Suit .
 	var S : Set{Nat} .
 	var N : Nat .
-
-	vars X Y Z U V W J : Card .
+	vars X Y : Card .
 
 	*** Get the union of the player hand and the Board (without repetitions of elements)
 	op GetAsSet : PlayerHand Board -> Set{Nat} .
@@ -25,16 +24,13 @@ fmod POKER-KICKER-CALCULATOR is
 
 	eq GetAsFlushList(PH, PL, G) = append(GetAsListOfFlush(PH, G), GetAsListOfFlush(PL, G)) .
 
-
 	*** Delete the point cards from the set
 	op DeletePointFromSet : Set{Nat} Point -> Set{Nat} .
 
 	eq DeletePointFromSet(S, HCard) = S .
-
 	eq DeletePointFromSet(S, Pairs(X)) = delete(ToNat(CardNum(X)), S) .
 	eq DeletePointFromSet(S, Tris(X)) = delete(ToNat(CardNum(X)), S) .
 	eq DeletePointFromSet(S, Poker(X)) = delete(ToNat(CardNum(X)), S) .
-
 	eq DeletePointFromSet(S, Full(Tris(Y), Pairs(X))) = S \ ( ToNat(CardNum(X)), ToNat(CardNum(Y)) ) .
 	eq DeletePointFromSet(S, DPairs(X, Y)) = S \ ( ToNat(CardNum(X)), ToNat(CardNum(Y)) ) .
 

@@ -1,6 +1,6 @@
 fmod POKER-FINAL-HAND is
-	including POKER-POINT .
-	including POKER-KICKER .
+	pr POKER-POINT .
+	pr POKER-KICKER .
 	sort FinalHand .
 
 	op _#_ : Point Kicker -> FinalHand [ctor] .

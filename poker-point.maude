@@ -1,13 +1,13 @@
 fmod POKER-POINT is
 
-	including POKER-CARD .
+	pr POKER-CARD .
 	sort Point .
 
 	op ToNat : Point -> Nat .
 	ops _>_ _<_ _equals_ : Point Point -> Bool .
 
 	vars X Y : Point .
-	vars Z V W L M : Card .
+	vars Z V W L : Card .
 	vars T R : Nat .
 	vars O G : Suit .
 

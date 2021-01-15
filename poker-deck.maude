@@ -1,6 +1,6 @@
 fmod POKER-DECK is
-	protecting POKER-CARD .
-	protecting INT .
+	pr POKER-CARD .
+	pr INT .
 
 	sort Deck .
 	subsort Card < Deck .

@@ -1,11 +1,9 @@
 fmod POKER-KICKER is
 
-	including POKER-CARD .
 	pr SORTABLE-LIST{Nat<} .
 	sort Kicker .
 	subsort List{Nat<} < Kicker .
 
-	vars A B C D E F G : Card .
 	vars H I : Kicker .
 	vars L : NeList{Nat<} .
 

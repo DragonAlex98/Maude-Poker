@@ -1,6 +1,6 @@
 fmod POKER-LISTS-AND-SETS is
-	protecting SET{Nat} .
-	protecting SORTABLE-LIST{Nat<} .
+	pr SET{Nat} .
+	pr SORTABLE-LIST{Nat<} .
 
 	var E : Nat .
 	var L : List{Nat<} .

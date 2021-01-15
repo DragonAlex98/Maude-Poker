@@ -125,10 +125,10 @@ red GetPlayerHand(P1(<[A C],[4 H]>)) . *** <[A C],[4 H]>
 red GetPlayerHand(P1(<[A C],[4 D]>)) . *** <[A C],[4 D]>
 
 *** Game config examples ***
-red P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) Board [J C] [5 S] [A S] [8 H] [9 D] . *** Game
-red GetP1(P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) Board [J C] [5 S] [A S] [8 H] [9 D]) . *** P1(<[A C],[4 H]>)
-red GetP2(P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) Board [J C] [5 S] [A S] [8 H] [9 D]) . *** P2(<[A H],[10 S]>)
-red Board(P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) Board [J C] [5 S] [A S] [8 H] [9 D]) . *** [J C] [5 S] [A S] [8 H] [9 D]
+red P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) board [J C] [5 S] [A S] [8 H] [9 D] . *** Game
+red GetP1(P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) board [J C] [5 S] [A S] [8 H] [9 D]) . *** P1(<[A C],[4 H]>)
+red GetP2(P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) board [J C] [5 S] [A S] [8 H] [9 D]) . *** P2(<[A H],[10 S]>)
+red GetBoard(P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) board [J C] [5 S] [A S] [8 H] [9 D]) . *** [J C] [5 S] [A S] [8 H] [9 D]
 
 *** Points Calculator examples ***
 
@@ -174,10 +174,6 @@ red CheckFull(<[A C],[A H]>, [8 C] [5 H] [7 S] [5 D] [A C]) . *** Full
 
 *** N + F
 red CheckFull(<[3 C],[4 H]>, [8 C] [5 H] [5 S] [5 D] [8 C]) . *** Full
-
-*** red CheckFull(<[A C],[6 H]>, [A C] [A H] [A S] [6 D] [J C]) . *** HCard
-
-red CheckFull(<[A C],[6 H]>, [A C] [A H] [3 S] [Q D] [J C]) . *** HCard
 
 *** Flush - Check if a PlayerHand scored a Flush **
 red CheckFlush(<[2 H],[3 H]>, [A H] [A H] [A H] [A D] [4 C]) . *** Flush
@@ -292,4 +288,7 @@ red <[A C],[6 D]> . *** Player hand
 red P1(<[A C],[6 D]>) . *** Player
 red [A C] [3 H] [A S] [4 D] [J C] . *** Board
 red P1(<[A C],[4 H]>) vs P2(<[A H],[10 S]>) board [J C] [5 S] [A S] [8 H] [9 D] . *** Game
-red Winner(P1(<[10 H],[J S]>) vs P2(<[A S],[Q H]>) board [10 S] [Q D] [3 H] [A C] [10 D]) .
+red Winner(P1(<[10 H],[J S]>) vs P2(<[A S],[Q H]>) board [10 S] [Q D] [3 H] [A C] [10 D]) . *** Winner
+
+rew [] [] [] [] [] P1(<>) P2(<>) init 0 .
+search [] [] [] [] [] P1(<>) P2(<>) init 0 =>* B:Board P1:Player P2:Player D:Deck W:Winner N:Nat such that GetWinner(W:Winner) == 2 and N:Nat > 50 .

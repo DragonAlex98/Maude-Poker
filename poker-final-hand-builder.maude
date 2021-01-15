@@ -1,12 +1,10 @@
 fmod POKER-FINAL-HAND-BUILDER is
-	including POKER-PLAYER-HAND .
-	including POKER-GAME-BOARD .
-	including POKER-FINAL-HAND .
-	including POKER-POINTS-CALCULATOR .
-	including POKER-KICKER-CALCULATOR .
+	pr POKER-FINAL-HAND .
+	pr POKER-POINTS-CALCULATOR .
+	pr POKER-KICKER-CALCULATOR .
 
-	vars X Y : PlayerHand .
-	vars Z V : Board .
+	vars X : PlayerHand .
+	vars Z : Board .
 
 	op GetFHand : PlayerHand Board -> FinalHand .
 

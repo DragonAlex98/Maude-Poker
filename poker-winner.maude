@@ -1,11 +1,11 @@
 fmod POKER-WINNER is
-	including POKER-FINAL-HAND-BUILDER .
-	including POKER-PLAYER .
+	pr POKER-FINAL-HAND-BUILDER .
+	pr POKER-PLAYER .
 	sorts Winner PokerGame .
 	subsort Player < Winner .
 
 	*** Creates a poker game with the players and the Board .
-	op _vs_board_ : Player Player Board -> PokerGame .
+	op _vs_board_ : Player Player Board -> PokerGame [ctor] .
 
 	*** Returns p1, p2 or Board of this game	
 	ops GetP1 GetP2 : PokerGame -> Player .
@@ -13,7 +13,6 @@ fmod POKER-WINNER is
 	
 	vars F L : Player .
 	var P : Board .
-	var G : PokerGame .
 	var Pn : Point .
 	
 	eq GetP1(F vs L board P) = F .

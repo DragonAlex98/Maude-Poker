@@ -1,13 +1,12 @@
 fmod POKER-CARD-NUMBER is
-	protecting NAT .
-	protecting BOOL .
+	pr NAT .
+	pr BOOL .
 	sort Number .
 	ops A 2 3 4 5 6 7 8 9 10 J Q K : -> Number [ctor] .
 	op ToNat : Number -> Nat .
 	op _equals_ : Number Number -> Bool .
 	op _>_ : Number Number -> Bool .
 	op _<_ : Number Number -> Bool .
-	
 	
 	vars X Y : Number .
 

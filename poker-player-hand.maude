@@ -1,13 +1,13 @@
 fmod POKER-PLAYER-HAND is
 
-	including POKER-CARD .
-	including POKER-LISTS-AND-SETS .
+	pr POKER-CARD .
+	pr POKER-LISTS-AND-SETS .
 	sort PlayerHand .
 
 	op <> : -> PlayerHand [ctor] .
 	op <_,_> : Card Card -> PlayerHand [ctor] .
 	
-	vars X Y S T : Card .
+	vars X Y : Card .
 	var G : Suit .
 	var V W : PlayerHand .
 	var Z : Nat .
